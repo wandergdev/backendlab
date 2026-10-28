@@ -2,11 +2,10 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useLang } from '../../i18n/lang';
 import { dueCardIds, level, setSetting, useProgress } from '../../store/progress';
-import { STACKS, useStack } from '../../i18n/stack';
+import { StackOnboarding, StackSwitch } from './StackSwitch';
 
 export function Layout({ children }: { children: ReactNode }) {
   const { lang, setLang, tx } = useLang();
-  const { stack, setStack } = useStack();
   const theme = useProgress((s) => s.settings.theme);
   const xp = useProgress((s) => s.xp);
   const streak = useProgress((s) => s.streak);
@@ -30,12 +29,13 @@ export function Layout({ children }: { children: ReactNode }) {
     { to: '/labs', label: tx('Laboratorios', 'Labs') },
     { to: '/glossary', label: tx('Glosario', 'Glossary') },
     { to: '/roadmap', label: tx('Ruta', 'Roadmap') },
+    { to: '/progress', label: tx('Mi progreso', 'My progress') },
   ];
 
   return (
     <>
       <header className="header">
-        <div className="container header-inner">
+        <div className="container header-inner" style={{ maxWidth: 1340 }}>
           <button className="btn btn-ghost btn-sm menu-btn" onClick={() => setOpen((o) => !o)} aria-label="menu">
             ☰
           </button>
@@ -51,11 +51,10 @@ export function Layout({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="header-stats">
-            <span className="stat-chip" title={tx('Racha de días estudiando', 'Daily study streak')}>🔥 {streak.count}</span>
-            <span className="stat-chip hide-mobile" title={`${lv.into}/${lv.need} XP`}>⭐ {tx('Nv', 'Lv')} {lv.lvl}</span>
-            <button className="btn btn-ghost btn-sm" onClick={() => setStack(stack === 'node' ? 'dotnet' : 'node')} title={tx('Cambiar el stack de los ejemplos de código', 'Switch the stack of the code examples')}>
-              {STACKS[stack].emoji} <span className="hide-mobile">{STACKS[stack].short}</span>
-            </button>
+            <Link to="/progress" className="stat-chip" style={{ color: 'var(--text)' }} title={`${tx('Racha', 'Streak')}: ${streak.count} · ${lv.into}/${lv.need} XP · ${tx('Mi progreso', 'My progress')}`}>
+              🔥 {streak.count} <span className="hide-mobile">· ⭐ {tx('Nv', 'Lv')} {lv.lvl}</span>
+            </Link>
+            <StackSwitch />
             <button className="btn btn-ghost btn-sm" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} title={tx('Cambiar idioma', 'Change language')}>
               {lang === 'es' ? '🇪🇸 ES' : '🇬🇧 EN'}
             </button>
@@ -66,6 +65,7 @@ export function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main>{children}</main>
+      <StackOnboarding />
       <footer className="footer">
         <div className="container row between">
           <span>
@@ -74,7 +74,10 @@ export function Layout({ children }: { children: ReactNode }) {
               The Backend Developer Fundamentals Guide
             </a>
           </span>
-          <span>{tx('Tu progreso se guarda solo en este navegador.', 'Your progress is stored only in this browser.')}</span>
+          <span>
+            {tx('Tu progreso se guarda en este navegador.', 'Your progress is stored in this browser.')}{' '}
+            <Link to="/progress">{tx('Llevarlo a otro dispositivo →', 'Take it to another device →')}</Link>
+          </span>
         </div>
       </footer>
     </>

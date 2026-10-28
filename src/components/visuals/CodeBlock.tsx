@@ -37,6 +37,7 @@ export function CodeBlock({ snippet, copy = true }: { snippet: CodeSnippet; copy
               {STACKS[st].emoji} {STACKS[st].short}
             </button>
           ))}
+          <span className="tiny faint hide-mobile" style={{ marginLeft: 6 }}>← {tx('cambia todos los ejemplos', 'switches all examples')}</span>
         </div>
       )}
       <div style={{ position: 'relative' }}>

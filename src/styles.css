@@ -167,17 +167,18 @@ p { margin: 0 0 0.8em; }
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.2rem; color: var(--text) !important; }
 .logo-mark { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--green)); display: grid; place-items: center; font-size: 18px; }
 .nav { display: flex; gap: 4px; margin-left: 12px; }
-.nav a { padding: 8px 12px; border-radius: 10px; color: var(--muted); font-weight: 800; font-size: 0.95rem; }
+.nav a { padding: 8px 10px; border-radius: 10px; color: var(--muted); font-weight: 800; font-size: 0.95rem; }
 .nav a:hover { background: var(--surface-2); color: var(--text); }
 .nav a.active { color: var(--text); background: var(--surface-2); }
 .header-stats { margin-left: auto; display: flex; gap: 8px; align-items: center; }
 .stat-chip { display: flex; align-items: center; gap: 4px; font-weight: 900; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: 0.9rem; }
 .menu-btn { display: none; }
-@media (max-width: 900px) {
+.nav a, .stat-chip { white-space: nowrap; }
+@media (max-width: 1280px) {
   .nav { display: none; }
   .nav.open { display: flex; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--bg); padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .menu-btn { display: inline-flex; }
-  .hide-mobile { display: none !important; }
+
 }
 
 /* ---------- Mapa de módulos ---------- */
@@ -298,3 +299,17 @@ p { margin: 0 0 0.8em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ---------- Selector de stack ---------- */
+.stack-switch { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
+.stack-switch-label { font-size: 0.75rem; font-weight: 800; color: var(--muted); padding: 0 6px 0 4px; }
+.stack-opt { display: inline-flex; align-items: center; gap: 4px; border: 1px solid transparent; background: transparent; border-radius: 9px; padding: 4px 9px; font-weight: 800; font-size: 0.82rem; cursor: pointer; color: var(--muted); transition: background 0.2s, color 0.2s; }
+.stack-opt:hover:not(.on) { color: var(--text); background: color-mix(in srgb, var(--text) 8%, transparent); }
+.stack-opt.on { color: #fff; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+@media (max-width: 1180px) { .stack-switch-label { display: none; } }
+@media (max-width: 520px) { .stack-opt-text { display: none; } .stack-opt { padding: 4px 7px; } }
+
+/* ---------- Ventana modal ---------- */
+.modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(5, 6, 20, 0.7); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.modal { width: 100%; max-width: 640px; }
+@media (max-width: 900px) { .hide-mobile { display: none !important; } }

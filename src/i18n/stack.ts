@@ -11,7 +11,14 @@ export const STACKS: Record<Stack, { label: string; short: string; emoji: string
 /** El stack elegido (Node/TS o C#/.NET) decide qué versión de los ejemplos de código se muestra. */
 export function useStack() {
   const stack = useProgress((s) => s.settings.stack ?? 'node');
-  return { stack, setStack: (v: Stack) => setSetting('stack', v), isDotnet: stack === 'dotnet' };
+  return {
+    stack,
+    setStack: (v: Stack) => {
+      setSetting('stack', v);
+      setSetting('stackChosen', true);
+    },
+    isDotnet: stack === 'dotnet',
+  };
 }
 
 export function pickExercise(ex: Exercise, stack: Stack): ExerciseBase {

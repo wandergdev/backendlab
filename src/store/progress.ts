@@ -6,7 +6,7 @@ export type CardState = { box: number; due: string; seen: number; lapses: number
 
 export type ProgressState = {
   version: 1;
-  settings: { lang: 'es' | 'en'; theme: 'dark' | 'light'; stack: 'node' | 'dotnet' };
+  settings: { lang: 'es' | 'en'; theme: 'dark' | 'light'; stack: 'node' | 'dotnet'; stackChosen?: boolean; lastBackup?: string };
   xp: number;
   streak: { count: number; last: string };
   activity: Record<string, number>;
@@ -175,6 +175,48 @@ export function reviewCard(cardId: string, correct: boolean) {
 
 export function toggleRoadmap(id: string) {
   update((s) => ({ ...s, roadmap: { ...s.roadmap, [id]: !s.roadmap[id] } }));
+}
+
+/** La parte del progreso que viaja entre navegadores (los ajustes de pantalla se quedan en cada dispositivo). */
+export type PortableProgress = Omit<ProgressState, 'settings'>;
+
+export function portable(s: ProgressState = state): PortableProgress {
+  const { settings: _settings, ...rest } = s;
+  return rest;
+}
+
+/** Combina dos progresos sin perder nada: se queda con lo mejor de cada uno. */
+export function mergeProgress(a: PortableProgress, b: PortableProgress): PortableProgress {
+  const union = <T>(x: Record<string, T>, y: Record<string, T>, pick: (p: T, q: T) => T) => {
+    const out: Record<string, T> = { ...x };
+    for (const [k, v] of Object.entries(y)) out[k] = k in out ? pick(out[k], v) : v;
+    return out;
+  };
+  const lastA = a.streak.last ?? '';
+  const lastB = b.streak.last ?? '';
+  return {
+    version: 1,
+    xp: Math.max(a.xp, b.xp),
+    streak: lastA === lastB ? { last: lastA, count: Math.max(a.streak.count, b.streak.count) } : lastA > lastB ? a.streak : b.streak,
+    activity: union(a.activity, b.activity, (p, q) => Math.max(p, q)),
+    lessons: union(a.lessons, b.lessons, (p, q) => ({ done: p.done || q.done, step: Math.max(p.step, q.step) })),
+    practice: union(a.practice, b.practice, (p, q) => ({ best: Math.max(p.best, q.best), runs: Math.max(p.runs, q.runs) })),
+    tasks: union(a.tasks, b.tasks, (p, q) => p || q),
+    // Para cada tarjeta gana la que más veces se repasó (es la historia más reciente).
+    cards: union(a.cards, b.cards, (p, q) => (q.seen > p.seen ? q : p)),
+    roadmap: union(a.roadmap, b.roadmap, (p, q) => p || q),
+  };
+}
+
+export function applyImport(data: PortableProgress, mode: 'merge' | 'replace') {
+  update((s) => {
+    const base = mode === 'merge' ? mergeProgress(portable(s), data) : { ...portable(initial()), ...data };
+    return { ...s, ...base, settings: s.settings };
+  });
+}
+
+export function markBackup() {
+  setSetting('lastBackup', new Date().toISOString());
 }
 
 export function resetProgress() {
