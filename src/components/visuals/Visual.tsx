@@ -5,6 +5,7 @@ import { Blocks } from './Blocks';
 import { Sequence } from './Sequence';
 import { Pipeline } from './Pipeline';
 import { SimHost } from '../sims/SimHost';
+import { Glyph } from '../ui/Icon';
 
 export function Grid({ items, columns }: { items: GridItem[]; columns?: number }) {
   const { tr } = useLang();
@@ -35,7 +36,7 @@ function Side({ side, delay }: { side: CompareSide; delay: number }) {
   const color = side.color ?? 'var(--primary)';
   return (
     <motion.div className="card flat" initial={{ opacity: 0, x: delay ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay }} style={{ borderColor: color, borderWidth: 2 }}>
-      <div style={{ fontSize: '2rem' }}>{side.emoji}</div>
+      <div style={{ color }}><Glyph emoji={side.emoji} size={34} /></div>
       <h3 style={{ color }}>{tr(side.title)}</h3>
       <ul style={{ margin: 0, paddingLeft: 18 }}>
         {side.points.map((p, i) => (

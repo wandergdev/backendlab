@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import type { SeqActor, SeqMessage } from '../../types';
 import { useLang } from '../../i18n/lang';
+import { Glyph } from '../ui/Icon';
 
 /**
  * Diagrama de secuencia animado: cada mensaje "viaja" de un actor a otro como un paquete.
@@ -36,7 +37,7 @@ export function Sequence({ actors, messages, autoplay = false }: { actors: SeqAc
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${n}, 1fr)`, gap: 4, marginBottom: 6 }}>
         {actors.map((a) => (
           <div key={a.id} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', lineHeight: 1.1 }}>{a.emoji}</div>
+            <div style={{ lineHeight: 1.1, display: 'flex', justifyContent: 'center', color: 'var(--primary-2)' }}><Glyph emoji={a.emoji} size={34} /></div>
             <div className="small bold" style={{ lineHeight: 1.2 }}>{tr(a.label)}</div>
           </div>
         ))}

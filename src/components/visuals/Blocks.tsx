@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react';
 import { motion } from 'motion/react';
 import type { BlockPiece, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
+import { Glyph } from '../ui/Icon';
 
 const PALETTE = ['#7c6cff', '#4cc9f0', '#ff9f43', '#f78fb3', '#ffd166', '#00d29a'];
 
@@ -30,7 +31,7 @@ export function Blocks({ pieces, result, resultEmoji, compact = false }: { piece
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: i * step, type: 'spring', stiffness: 260, damping: 18 }}
             >
-              {p.emoji && <span className="em" style={compact ? { fontSize: '1.1rem' } : undefined}>{p.emoji}</span>}
+              {p.emoji && <span className="em"><Glyph emoji={p.emoji} size={compact ? 18 : 28} /></span>}
               <span>{tr(p.label)}</span>
             </motion.div>
           </Fragment>
@@ -45,7 +46,7 @@ export function Blocks({ pieces, result, resultEmoji, compact = false }: { piece
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ delay: pieces.length * step + step * 0.6, type: 'spring', stiffness: 220, damping: 12 }}
         >
-          {resultEmoji && <span className="em">{resultEmoji}</span>}
+          {resultEmoji && <span className="em"><Glyph emoji={resultEmoji} size={28} /></span>}
           <span>{tr(result)}</span>
         </motion.div>
       </div>

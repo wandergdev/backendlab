@@ -5,6 +5,7 @@ import { useLang } from '../i18n/lang';
 import { MODULES } from '../content';
 import { useProgress } from '../store/progress';
 import { moduleStatus } from '../lib/status';
+import { ModuleIcon } from '../components/ui/Icon';
 
 export function Stars({ n }: { n: number }) {
   return <span className="stars">{[0, 1, 2].map((i) => (i < n ? '⭐' : '☆')).join('')}</span>;
@@ -15,7 +16,7 @@ export function ModuleCard({ m }: { m: Module }) {
   const st = useProgress((s) => moduleStatus(m, s));
   return (
     <Link to={`/m/${m.id}`} className="card module-card" style={{ ['--mc' as string]: m.color }}>
-      <div className="module-icon">{m.emoji}</div>
+      <ModuleIcon id={m.id} color={m.color} />
       <div className="grow" style={{ minWidth: 0 }}>
         <div className="module-num">{tx('Módulo', 'Module')} {m.num}</div>
         <div className="bold" style={{ lineHeight: 1.25 }}>{tr(m.title)}</div>

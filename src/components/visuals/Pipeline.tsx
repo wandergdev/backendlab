@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import type { PipeStage, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
+import { Glyph } from '../ui/Icon';
 
 /**
  * Una "línea de ensamblaje": algo (un request, un pedido, un commit) pasa por estaciones.
@@ -51,7 +52,7 @@ export function Pipeline({ item, itemEmoji, stages, success, vertical = true, on
           return (
             <div key={i} style={{ flex: vertical ? undefined : '1 1 150px' }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '10px 12px', borderRadius: 14, border: `2px solid ${border}`, background: 'var(--surface)', transition: 'border-color .25s', position: 'relative' }}>
-                <div style={{ fontSize: '1.6rem', width: 36, textAlign: 'center' }}>{s.emoji}</div>
+                <div style={{ width: 36, display: 'flex', justifyContent: 'center', color: 'var(--primary-2)' }}><Glyph emoji={s.emoji} size={28} /></div>
                 <div className="grow" style={{ minWidth: 0 }}>
                   <div className="bold">{tr(s.label)}</div>
                   {s.desc && <div className="small muted" style={{ lineHeight: 1.35 }}>{tr(s.desc)}</div>}

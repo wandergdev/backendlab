@@ -8,6 +8,7 @@ import type { Step } from '../types';
 import { Visual } from '../components/visuals/Visual';
 import { CodeBlock } from '../components/visuals/CodeBlock';
 import { Exercise } from '../components/exercises/Exercise';
+import { Glyph } from '../components/ui/Icon';
 
 function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => void }) {
   const { tr, tx } = useLang();
@@ -38,7 +39,7 @@ function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => voi
   return (
     <div className="stack" style={{ gap: 18 }}>
       <div>
-        {step.emoji && <div style={{ fontSize: '2.8rem', lineHeight: 1.1 }}>{step.emoji}</div>}
+        {step.emoji && <div className="icon-tile" style={{ width: 64, height: 64, color: 'var(--primary-2)', ['--tile' as string]: 'var(--primary)' }}><Glyph emoji={step.emoji} size={36} /></div>}
         <h1 style={{ fontSize: 'clamp(1.5rem, 3.6vw, 2.2rem)', marginTop: 8 }}>{tr(step.title)}</h1>
         <p style={{ fontSize: '1.12rem' }}>{tr(step.body)}</p>
       </div>

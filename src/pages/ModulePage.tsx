@@ -10,6 +10,7 @@ import { PracticeRunner } from '../components/exercises/PracticeRunner';
 import { CardDeck } from '../components/exercises/CardDeck';
 import { SimHost } from '../components/sims/SimHost';
 import { Stars } from './Modules';
+import { ModuleIcon } from '../components/ui/Icon';
 
 type Tab = 'overview' | 'practice' | 'labs' | 'cards';
 
@@ -42,7 +43,7 @@ export function ModulePage({ tab = 'overview' }: { tab?: Tab }) {
       </div>
       <div className="card mt" style={{ borderColor: m.color, borderWidth: 2 }}>
         <div className="row" style={{ alignItems: 'flex-start', gap: 18 }}>
-          <div className="module-icon" style={{ width: 76, height: 76, fontSize: 40 }}>{m.emoji}</div>
+          <ModuleIcon id={m.id} color={m.color} size={76} />
           <div className="grow" style={{ minWidth: 220 }}>
             <div className="module-num">{tx('Módulo', 'Module')} {m.num} / {MODULES.length}</div>
             <h1 style={{ margin: '4px 0' }}>{tr(m.title)}</h1>
