@@ -1,0 +1,125 @@
+import { t, type Module } from '../../types';
+
+export const dataFlow: Module = {
+  id: 'data-flow',
+  num: 4,
+  emoji: '🍰',
+  color: '#ff9f43',
+  title: t('Cómo fluyen los datos: las capas', 'How data flows: the layers'),
+  tagline: t('Controller, Service, Repository y Base de datos', 'Controller, Service, Repository and Database'),
+  formula: {
+    pieces: [
+      { label: 'Controller', emoji: '🎮' },
+      { label: 'Service', emoji: '🧠' },
+      { label: 'Repository', emoji: '🗄️' },
+      { label: t('BD', 'DB'), emoji: '💾' },
+    ],
+    result: t('Código ordenado', 'Organized code'),
+  },
+  lesson: [
+    {
+      kind: 'concept',
+      emoji: '🍰',
+      title: t('Un pastel de capas', 'A layered cake'),
+      body: t('En una app real los datos no van directo del request a la base de datos. Pasan por capas, y cada capa tiene UN trabajo. Esto es lo que separa a quien copia código de quien entiende lo que pasa.', 'In a real app, data does not go straight from the request to the database. It passes through layers, and each layer has ONE job. This is what separates someone who copies code from someone who understands what is happening.'),
+      visual: {
+        type: 'grid',
+        items: [
+          { badge: '🎮', title: 'Controller', desc: t('Recibe el request, saca los datos y llama al servicio correcto.', 'Receives the request, extracts the data and calls the right service.'), color: '#7c6cff' },
+          { badge: '🧠', title: 'Service', desc: t('El cerebro: reglas de negocio. "Menores de 18 no pueden comprar esto".', 'The brain: business rules. "Under-18s cannot buy this".'), color: '#ff9f43' },
+          { badge: '🗄️', title: 'Repository', desc: t('Habla con la base de datos. Traduce objetos ↔ filas.', 'Talks to the database. Translates objects ↔ rows.'), color: '#4cc9f0' },
+          { badge: '💾', title: t('Base de datos', 'Database'), desc: t('Guarda los datos de forma permanente.', 'Stores data permanently.'), color: '#00d29a' },
+        ],
+      },
+    },
+    {
+      kind: 'concept',
+      emoji: '🍽️',
+      title: t('La analogía del restaurante', 'The restaurant analogy'),
+      body: t('Cada capa es una persona del restaurante con un trabajo claro. Nadie hace el trabajo del otro.', 'Each layer is a person in the restaurant with a clear job. Nobody does the other’s job.'),
+      visual: {
+        type: 'blocks',
+        pieces: [
+          { label: t('Mesero', 'Waiter'), emoji: '🧑‍🍳' },
+          { label: t('Chef', 'Chef'), emoji: '👨‍🍳' },
+          { label: t('Despensero', 'Pantry keeper'), emoji: '📦' },
+          { label: t('Despensa', 'Pantry'), emoji: '🏪' },
+        ],
+        result: t('Plato servido', 'Dish served'),
+        resultEmoji: '🍝',
+      },
+      analogy: {
+        real: t('El mesero toma el pedido (no cocina). El chef decide cómo prepararlo (no busca ingredientes). El despensero trae los ingredientes de la despensa.', 'The waiter takes the order (does not cook). The chef decides how to prepare it (does not fetch ingredients). The pantry keeper brings ingredients from the pantry.'),
+        code: t('Controller toma el request. Service aplica las reglas. Repository lee/escribe en la base de datos.', 'Controller takes the request. Service applies the rules. Repository reads/writes the database.'),
+      },
+    },
+    {
+      kind: 'concept',
+      emoji: '🛵',
+      title: t('Ejemplo real: pedir comida a domicilio', 'Real example: ordering food delivery'),
+      body: t('Envía el pedido y míralo bajar capa por capa. Luego apaga una regla del Service para ver quién lo rechaza.', 'Send the order and watch it go down layer by layer. Then turn off a Service rule to see who rejects it.'),
+      visual: { type: 'sim', id: 'layers' },
+    },
+    { kind: 'check', exercise: { type: 'match', q: t('¿Qué capa hace cada cosa?', 'Which layer does each thing?'), pairs: [[t('Leer el body del request', 'Read the request body'), 'Controller'], [t('"¿El restaurante está abierto?"', '"Is the restaurant open?"'), 'Service'], ['INSERT INTO orders…', 'Repository'], [t('Guardar datos para siempre', 'Store data forever'), t('Base de datos', 'Database')]], explain: t('Controller recibe · Service decide · Repository habla con la BD · BD guarda.', 'Controller receives · Service decides · Repository talks to the DB · DB stores.') } },
+    {
+      kind: 'concept',
+      emoji: '💻',
+      title: t('Las capas en código', 'The layers in code'),
+      body: t('Mira cómo cada función es corta y hace UNA cosa. Si mañana cambias PostgreSQL por MongoDB, solo tocas el repository.', 'See how each function is short and does ONE thing. If tomorrow you switch PostgreSQL for MongoDB, you only touch the repository.'),
+      code: { lang: 'ts', src: "// 🎮 controller: solo HTTP\nasync function createOrderController(req: Request, res: Response) {\n  const order = await orderService.create(req.user, req.body);\n  res.status(201).json(order);\n}\n\n// 🧠 service: solo reglas de negocio\nasync function create(user: User, { restaurantId, items }: CreateOrderDto): Promise<Order> {\n  const restaurant = await restaurantRepo.findById(restaurantId);\n  if (!restaurant.isOpen) throw new Error('Restaurante cerrado');\n  if (user.balance < total(items)) throw new Error('Saldo insuficiente');\n  return orderRepo.save({ userId: user.id, restaurantId, items });\n}\n\n// 🗄️ repository: solo base de datos\nfunction save(order: NewOrder): Promise<Order> {\n  return db.query('INSERT INTO orders (...) VALUES (...)', [...]);\n}", dotnet: { lang: 'csharp', src: "// 🎮 Controller: solo HTTP\n[HttpPost]\npublic async Task<IActionResult> Create(CreateOrderDto dto)\n{\n    var order = await _orderService.CreateAsync(CurrentUser, dto);\n    return Created($\"/orders/{order.Id}\", order);\n}\n\n// 🧠 Service: solo reglas de negocio\npublic async Task<Order> CreateAsync(User user, CreateOrderDto dto)\n{\n    var restaurant = await _restaurantRepo.FindByIdAsync(dto.RestaurantId);\n    if (!restaurant.IsOpen) throw new InvalidOperationException(\"Restaurante cerrado\");\n    if (user.Balance < Total(dto.Items)) throw new InvalidOperationException(\"Saldo insuficiente\");\n    return await _orderRepo.SaveAsync(new Order { UserId = user.Id, RestaurantId = dto.RestaurantId });\n}\n\n// 🗄️ Repository: solo base de datos (con EF Core)\npublic async Task<Order> SaveAsync(Order order)\n{\n    _db.Orders.Add(order);\n    await _db.SaveChangesAsync();   // EF Core genera el INSERT\n    return order;\n}" } },
+    },
+    {
+      kind: 'concept',
+      emoji: '🤯',
+      title: t('¿Por qué no ponerlo todo en un archivo?', 'Why not put everything in one file?'),
+      body: t('Funciona… hasta que la app crece. Con capas cada parte se puede entender, probar y reutilizar por separado.', 'It works… until the app grows. With layers each part can be understood, tested and reused separately.'),
+      visual: {
+        type: 'compare',
+        left: { emoji: '🍝', title: t('Todo en un archivo', 'Everything in one file'), color: 'var(--red)', points: [t('Difícil de leer', 'Hard to read'), t('Cambiar algo rompe otra cosa', 'Changing something breaks something else'), t('Imposible de probar por partes', 'Impossible to test in parts'), t('Lógica repetida', 'Repeated logic')] },
+        right: { emoji: '🍰', title: t('Con capas', 'With layers'), color: 'var(--green)', points: [t('Cada archivo hace una cosa', 'Each file does one thing'), t('El Service se reutiliza (API, app móvil, tareas)', 'The Service is reused (API, mobile, jobs)'), t('Pruebas unitarias del Service sin BD', 'Unit tests of the Service without a DB'), t('Así trabajan los equipos profesionales', 'This is how professional teams work')] },
+      },
+    },
+    { kind: 'check', exercise: { type: 'mcq', q: t('Cambias de PostgreSQL a MongoDB. ¿Qué capa deberías modificar principalmente?', 'You switch from PostgreSQL to MongoDB. Which layer should you mainly change?'), options: ['Repository', 'Controller', 'Service', t('Todas por igual', 'All equally')], answer: 0, explain: t('Esa es la gracia de las capas: el Repository aísla la base de datos.', 'That is the point of layers: the Repository isolates the database.') } },
+    {
+      kind: 'recap',
+      points: [
+        t('🎮 Controller: recibe y responde HTTP.', '🎮 Controller: receives and answers HTTP.'),
+        t('🧠 Service: reglas de negocio (el cerebro).', '🧠 Service: business rules (the brain).'),
+        t('🗄️ Repository: habla con la base de datos.', '🗄️ Repository: talks to the database.'),
+        t('💾 Base de datos: guarda para siempre.', '💾 Database: stores forever.'),
+        t('🍰 Una capa = una responsabilidad. Así el código crece sin volverse un desastre.', '🍰 One layer = one responsibility. That is how code grows without becoming a mess.'),
+      ],
+    },
+  ],
+  practice: [
+    { type: 'order', q: t('Ordena las capas desde que llega el request', 'Order the layers from when the request arrives'), items: ['Controller', 'Service', 'Repository', t('Base de datos', 'Database')], explain: t('De arriba (HTTP) hacia abajo (datos).', 'From the top (HTTP) to the bottom (data).') },
+    { type: 'mcq', q: t('"Los usuarios menores de 18 no pueden comprar alcohol". ¿Dónde va esta regla?', '"Users under 18 cannot buy alcohol". Where does this rule go?'), options: ['Service', 'Controller', 'Repository', 'Router'], answer: 0, explain: t('Las reglas de negocio viven en el Service.', 'Business rules live in the Service.') },
+    { type: 'tf', q: t('El Controller debería escribir consultas SQL directamente.', 'The Controller should write SQL queries directly.'), answer: false, explain: t('Eso es trabajo del Repository.', 'That is the Repository’s job.') },
+    { type: 'match', q: t('Analogía del restaurante', 'Restaurant analogy'), pairs: [[t('Mesero', 'Waiter'), 'Controller'], [t('Chef', 'Chef'), 'Service'], [t('Despensero', 'Pantry keeper'), 'Repository'], [t('Despensa', 'Pantry'), t('Base de datos', 'Database')]], explain: t('Cada uno con su trabajo.', 'Each with their own job.') },
+    { type: 'mcq', q: t('¿Cuál es la principal ventaja de separar en capas?', 'What is the main advantage of separating into layers?'), options: [t('Código organizado, reutilizable y fácil de probar', 'Organized, reusable and easy-to-test code'), t('El servidor usa menos electricidad', 'The server uses less electricity'), t('No necesitas base de datos', 'You do not need a database'), t('El navegador carga más rápido', 'The browser loads faster')], answer: 0, explain: t('Orden = puedes crecer sin miedo.', 'Order = you can grow without fear.') },
+    {
+      type: 'code',
+      q: t('Escribe la función de Service "canBuy(user, product)": devuelve false si el producto es solo para adultos (product.adultOnly) y el usuario tiene menos de 18 (user.age). Si no, true.', 'Write the Service function "canBuy(user, product)": returns false if the product is adults-only (product.adultOnly) and the user is under 18 (user.age). Otherwise true.'),
+      fn: 'canBuy',
+      starter: "interface User { age: number }\ninterface Product { adultOnly: boolean }\n\nfunction canBuy(user: User, product: Product): boolean {\n  // regla de negocio aquí\n}",
+      solution: "interface User { age: number }\ninterface Product { adultOnly: boolean }\n\nfunction canBuy(user: User, product: Product): boolean {\n  if (product.adultOnly && user.age < 18) return false;\n  return true;\n}",
+      csharp: "public record User(int Age);\npublic record Product(bool AdultOnly);\n\npublic static bool CanBuy(User user, Product product)\n{\n    if (product.AdultOnly && user.Age < 18) return false;\n    return true;\n}",
+      tests: [
+        { args: [{ age: 16 }, { adultOnly: true }], expect: false },
+        { args: [{ age: 25 }, { adultOnly: true }], expect: true },
+        { args: [{ age: 16 }, { adultOnly: false }], expect: true },
+      ],
+      explain: t('Esta función no sabe nada de HTTP ni de SQL: es lógica pura. Por eso es tan fácil de probar.', 'This function knows nothing about HTTP or SQL: it is pure logic. That is why it is so easy to test.'),
+    },
+    { type: 'mcq', q: t('En el pedido de comida, ¿quién revisa si hay un repartidor disponible?', 'In the food order, who checks if a driver is available?'), options: ['Service', 'Repository', 'Controller', t('El navegador', 'The browser')], answer: 0, explain: t('Coordinar piezas es trabajo del Service.', 'Coordinating pieces is the Service’s job.') },
+  ],
+  labs: [{ id: 'flow-layers', sim: 'layers', title: t('Pedido a domicilio por capas', 'Food delivery through layers'), desc: t('Mira el pedido atravesar cada capa y dónde lo frenan las reglas.', 'Watch the order cross each layer and where the rules stop it.') }],
+  cards: [
+    { id: 'flow-1', emoji: '🍰', front: t('Las 4 capas típicas de un backend', 'The 4 typical backend layers'), back: 'Controller → Service → Repository → ' + 'DB' },
+    { id: 'flow-2', emoji: '🎮', front: t('¿Qué hace el Controller?', 'What does the Controller do?'), back: t('Recibe el request HTTP, extrae los datos, llama al Service y devuelve el response.', 'Receives the HTTP request, extracts data, calls the Service and returns the response.') },
+    { id: 'flow-3', emoji: '🧠', front: t('¿Qué hace el Service?', 'What does the Service do?'), back: t('El cerebro: aplica las reglas de negocio y coordina las piezas.', 'The brain: applies business rules and coordinates the pieces.') },
+    { id: 'flow-4', emoji: '🗄️', front: t('¿Qué hace el Repository?', 'What does the Repository do?'), back: t('Habla con la base de datos: traduce objetos de tu código ↔ filas.', 'Talks to the database: translates your code’s objects ↔ rows.') },
+    { id: 'flow-5', emoji: '🍽️', front: t('Analogía de las capas', 'Layers analogy'), back: t('Mesero (Controller) → Chef (Service) → Despensero (Repository) → Despensa (BD)', 'Waiter (Controller) → Chef (Service) → Pantry keeper (Repository) → Pantry (DB)') },
+    { id: 'flow-6', emoji: '✅', front: t('¿Por qué usar capas?', 'Why use layers?'), back: t('Código organizado, reutilizable y fácil de probar. Cada capa = una responsabilidad.', 'Organized, reusable, easy-to-test code. Each layer = one responsibility.') },
+  ],
+};

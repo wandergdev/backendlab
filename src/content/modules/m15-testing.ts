@@ -1,0 +1,91 @@
+import { t, type Module } from '../../types';
+
+export const testing: Module = {
+  id: 'testing',
+  num: 15,
+  emoji: '🧪',
+  color: '#00d29a',
+  title: t('Testing: tu red de seguridad', 'Testing: your safety net'),
+  tagline: t('Pruebas unitarias, de integración y E2E; la pirámide', 'Unit, integration and E2E tests; the pyramid'),
+  formula: {
+    pieces: [
+      { label: t('Entrada', 'Input'), emoji: '📥' },
+      { label: t('Esperado', 'Expected'), emoji: '🎯' },
+      { label: t('Real', 'Actual'), emoji: '📤' },
+    ],
+    result: '✅ / ❌',
+  },
+  lesson: [
+    {
+      kind: 'concept',
+      emoji: '🪢',
+      title: t('Código que revisa tu código', 'Code that checks your code'),
+      body: t('Una prueba dice: "con ESTA entrada, espero ESTA salida". Si el resultado real coincide → ✅. Si no → ❌ y sabes que algo se rompió ANTES de que lo vea un usuario.', 'A test says: "with THIS input, I expect THIS output". If the actual result matches → ✅. If not → ❌ and you know something broke BEFORE a user sees it.'),
+      visual: { type: 'blocks', pieces: [{ label: 'calculateTax(100)', emoji: '📥' }, { label: t('espero 15', 'expect 15'), emoji: '🎯' }], result: t('¿devolvió 15? ✅', 'returned 15? ✅'), resultEmoji: '🧪' },
+      code: { lang: 'ts', src: "import { it, expect } from 'vitest';\n\nit('calcula el 15% de impuesto', () => {\n  expect(calculateTax(100)).toBe(15);\n});", caption: t('Una prueba en Vitest/Jest', 'A test in Vitest/Jest'), dotnet: { lang: 'csharp', src: "// xUnit\npublic class TaxTests\n{\n    [Fact]\n    public void CalculaEl15PorCientoDeImpuesto()\n    {\n        Assert.Equal(15m, Tax.Calculate(100m));\n    }\n}" } },
+      analogy: { real: t('La red de los trapecistas: no la usas en cada salto, pero te atreves a saltar porque está ahí.', 'The trapeze artists’ net: you do not use it on every jump, but you dare to jump because it is there.'), code: t('Con pruebas, cambias código con confianza: si rompes algo, la prueba te avisa.', 'With tests, you change code confidently: if you break something, the test warns you.') },
+    },
+    {
+      kind: 'concept',
+      emoji: '🔬',
+      title: t('Los 3 tipos de prueba', 'The 3 types of tests'),
+      body: t('Del más pequeño al más grande:', 'From smallest to largest:'),
+      visual: { type: 'grid', items: [{ badge: '🔬', title: t('Unitaria', 'Unit'), desc: t('UNA función aislada. "¿calculateTax(100) devuelve 15?"', 'ONE isolated function. "Does calculateTax(100) return 15?"'), color: '#00d29a' }, { badge: '🔧', title: t('Integración', 'Integration'), desc: t('Varias piezas juntas. "¿POST /users guarda en la BD y responde 201?"', 'Several pieces together. "Does POST /users save to the DB and return 201?"'), color: '#ffd166' }, { badge: '🧑‍💻', title: 'E2E', desc: t('Todo el sistema como un usuario. "¿Puede registrarse, entrar y comprar?"', 'The whole system as a user. "Can they sign up, log in and buy?"'), color: '#ff6b81' }] },
+    },
+    { kind: 'concept', emoji: '🔺', title: t('La pirámide de pruebas', 'The testing pyramid'), body: t('MUCHAS unitarias (rápidas, baratas), ALGUNAS de integración y POCAS E2E (lentas, caras). La mayoría de los bugs los atrapan las unitarias. Arma la pirámide:', 'MANY unit tests (fast, cheap), SOME integration tests and FEW E2E (slow, expensive). Most bugs are caught by unit tests. Build the pyramid:'), visual: { type: 'sim', id: 'pyramid' } },
+    { kind: 'check', exercise: { type: 'mcq', q: t('"Un usuario abre la web, se registra, inicia sesión y compra". ¿Qué tipo de prueba es?', '"A user opens the site, signs up, logs in and buys". Which test type is it?'), options: ['E2E', t('Unitaria', 'Unit'), t('Integración', 'Integration'), t('Ninguna', 'None')], answer: 0, explain: t('Todo el sistema, desde el punto de vista del usuario.', 'The whole system, from the user’s point of view.') } },
+    { kind: 'concept', emoji: '🔴🟢', title: t('Rojo → verde: arregla un bug con pruebas', 'Red → green: fix a bug with tests'), body: t('Esta función tiene bugs en los casos raros. Corre las pruebas, mira cuáles fallan y arréglala hasta que todo esté en verde.', 'This function has bugs in edge cases. Run the tests, see which fail and fix it until everything is green.'), visual: { type: 'sim', id: 'testRunner' } },
+    {
+      kind: 'concept',
+      emoji: '🧠',
+      title: t('¿Qué casos probar?', 'Which cases to test?'),
+      body: t('El caso normal casi siempre funciona. Los bugs viven en los BORDES: cero, negativos, vacío, null, números enormes, decimales.', 'The normal case almost always works. Bugs live at the EDGES: zero, negatives, empty, null, huge numbers, decimals.'),
+      visual: { type: 'grid', items: [{ badge: '✅', title: t('Caso feliz', 'Happy path'), desc: 'calculateTax(100)', color: '#00d29a' }, { badge: '0️⃣', title: t('Cero / vacío', 'Zero / empty'), desc: 'calculateTax(0), ""', color: '#4cc9f0' }, { badge: '➖', title: t('Negativos', 'Negatives'), desc: 'calculateTax(-50)', color: '#ff9f43' }, { badge: '🔢', title: t('Decimales', 'Decimals'), desc: 'calculateTax(19.99)', color: '#ffd166' }, { badge: '❓', title: 'null / undefined', desc: 'calculateTax()', color: '#ff6b81' }] },
+    },
+    {
+      kind: 'recap',
+      points: [
+        t('🧪 Prueba = entrada + resultado esperado vs resultado real.', '🧪 Test = input + expected result vs actual result.'),
+        t('🔬 Unitarias · 🔧 Integración · 🧑‍💻 E2E.', '🔬 Unit · 🔧 Integration · 🧑‍💻 E2E.'),
+        t('🔺 Pirámide: muchas unitarias, pocas E2E.', '🔺 Pyramid: many unit, few E2E.'),
+        t('🧠 Prueba los bordes: 0, negativos, vacío, null.', '🧠 Test the edges: 0, negatives, empty, null.'),
+        t('🪢 Las pruebas te dejan cambiar código sin miedo.', '🪢 Tests let you change code without fear.'),
+      ],
+    },
+  ],
+  practice: [
+    { type: 'match', q: t('Clasifica cada prueba', 'Classify each test'), pairs: [[t('isValidEmail("a@b.com") → true', 'isValidEmail("a@b.com") → true'), t('Unitaria', 'Unit')], [t('POST /orders guarda en PostgreSQL', 'POST /orders saves to PostgreSQL'), t('Integración', 'Integration')], [t('El usuario completa la compra en el navegador', 'The user completes checkout in the browser'), 'E2E']], explain: t('Tamaño de lo que se prueba: una función → varias piezas → todo.', 'Size of what is tested: one function → several pieces → everything.') },
+    { type: 'mcq', q: t('Según la pirámide, ¿de qué tipo deberías tener MÁS pruebas?', 'According to the pyramid, which type should you have the MOST of?'), options: [t('Unitarias', 'Unit'), 'E2E', t('Integración', 'Integration'), t('Manuales', 'Manual')], answer: 0, explain: t('Rápidas y baratas: muchas.', 'Fast and cheap: many.') },
+    { type: 'tf', q: t('Si una función funciona con 100, no hace falta probar 0 ni números negativos.', 'If a function works with 100, there is no need to test 0 or negative numbers.'), answer: false, explain: t('Los bugs viven en los bordes.', 'Bugs live at the edges.') },
+    {
+      type: 'code',
+      q: t('Escribe "isValidEmail(str)": true si tiene exactamente un "@", algo antes, y un "." después del @.', 'Write "isValidEmail(str)": true if it has exactly one "@", something before it, and a "." after the @.'),
+      fn: 'isValidEmail',
+      starter: "function isValidEmail(str: string): boolean {\n\n}",
+      solution: "function isValidEmail(str: string): boolean {\n  const parts = str.split('@');\n  if (parts.length !== 2) return false;\n  const [user, domain] = parts;\n  return user.length > 0 && domain.includes('.');\n}",
+      csharp: "public static bool IsValidEmail(string str)\n{\n    var parts = str.Split('@');\n    if (parts.Length != 2) return false;\n    return parts[0].Length > 0 && parts[1].Contains('.');\n}\n\n[Theory]\n[InlineData(\"ana@mail.com\", true)]\n[InlineData(\"@mail.com\", false)]\npublic void ValidaEmails(string email, bool expected) => Assert.Equal(expected, IsValidEmail(email));",
+      tests: [
+        { args: ['ana@mail.com'], expect: true },
+        { args: ['anamail.com'], expect: false },
+        { args: ['@mail.com'], expect: false },
+        { args: ['ana@mail'], expect: false },
+        { args: ['a@b@c.com'], expect: false },
+      ],
+      explain: t('Fíjate cómo las pruebas cubren el caso feliz Y los bordes.', 'Notice how the tests cover the happy path AND the edges.'),
+    },
+    { type: 'mcq', q: t('¿Cuál es la principal razón para escribir pruebas?', 'What is the main reason to write tests?'), options: [t('Cambiar código con confianza sin romper lo que ya funciona', 'Change code confidently without breaking what already works'), t('Que el código sea más largo', 'Make the code longer'), t('Que el servidor sea más rápido', 'Make the server faster'), t('Reemplazar la base de datos', 'Replace the database')], answer: 0, explain: t('Las pruebas son tu red de seguridad.', 'Tests are your safety net.') },
+    { type: 'fill', q: t('Completa la prueba', 'Complete the test'), template: "test('suma', () => {\n  ___(sum(2, 3)).___(5);\n});", blanks: ['expect', 'toBe'], distractors: ['assert', 'equals', 'check'], explain: t('expect(real).toBe(esperado) — sintaxis de Jest/Vitest.', 'expect(actual).toBe(expected) — Jest/Vitest syntax.') , dotnet: { type: 'fill', q: t('Completa la prueba en xUnit', 'Complete the test in xUnit'), lang: 'csharp', template: '[___]\npublic void Suma()\n{\n    Assert.___(5, Calc.Sum(2, 3));\n}', blanks: ['Fact', 'Equal'], distractors: ['Test', 'Expect', 'Same'], explain: t('[Fact] marca una prueba; Assert.Equal(esperado, real).', '[Fact] marks a test; Assert.Equal(expected, actual).') } },
+  ],
+  labs: [
+    { id: 'test-runner', sim: 'testRunner', title: t('Rojo → Verde', 'Red → Green'), desc: t('Arregla una función hasta que pasen todas las pruebas.', 'Fix a function until all tests pass.') },
+    { id: 'test-pyramid', sim: 'pyramid', title: t('La pirámide', 'The pyramid'), desc: t('Clasifica pruebas en su piso.', 'Sort tests onto their floor.') },
+  ],
+  cards: [
+    { id: 'tst-1', emoji: '🧪', front: t('¿Qué es una prueba?', 'What is a test?'), back: t('Código que verifica que otro código funciona: entrada → resultado esperado vs real.', 'Code that verifies other code works: input → expected vs actual result.') },
+    { id: 'tst-2', emoji: '🔬', front: t('Prueba unitaria', 'Unit test'), back: t('Prueba UNA función aislada. Rápida y barata.', 'Tests ONE isolated function. Fast and cheap.') },
+    { id: 'tst-3', emoji: '🔧', front: t('Prueba de integración', 'Integration test'), back: t('Prueba varias piezas juntas (ej: endpoint + base de datos).', 'Tests several pieces together (e.g. endpoint + database).') },
+    { id: 'tst-4', emoji: '🧑‍💻', front: t('Prueba E2E', 'E2E test'), back: t('Prueba todo el sistema como un usuario real. Lenta y cara.', 'Tests the whole system like a real user. Slow and expensive.') },
+    { id: 'tst-5', emoji: '🔺', front: t('La pirámide de pruebas', 'The testing pyramid'), back: t('Muchas unitarias · algunas de integración · pocas E2E', 'Many unit · some integration · few E2E') },
+    { id: 'tst-6', emoji: '🧠', front: t('¿Dónde viven los bugs?', 'Where do bugs live?'), back: t('En los bordes: 0, negativos, vacío, null, decimales, números enormes.', 'At the edges: 0, negatives, empty, null, decimals, huge numbers.') },
+  ],
+};

@@ -1,0 +1,90 @@
+import { t, type Module } from '../../types';
+
+export const networking: Module = {
+  id: 'networking',
+  num: 12,
+  emoji: '📡',
+  color: '#00d29a',
+  title: t('Redes esenciales', 'Networking essentials'),
+  tagline: t('Capas OSI, TCP vs UDP, WebSockets y balanceo de carga', 'OSI layers, TCP vs UDP, WebSockets and load balancing'),
+  formula: {
+    pieces: [
+      { label: t('Aplicación', 'Application'), emoji: '💬' },
+      { label: t('Transporte', 'Transport'), emoji: '📮' },
+      { label: t('Red', 'Network'), emoji: '🏠' },
+    ],
+    result: t('Paquete en camino', 'Packet on its way'),
+  },
+  lesson: [
+    {
+      kind: 'concept',
+      emoji: '🧅',
+      title: t('El modelo OSI (versión simple)', 'The OSI model (simple version)'),
+      body: t('No necesitas memorizar las 7 capas. Para backend importan 3: Aplicación (HTTP, WebSocket: donde vive tu código), Transporte (TCP/UDP: cómo se entrega) y Red (IP: a dónde va).', 'You do not need to memorize all 7 layers. For backend, 3 matter: Application (HTTP, WebSocket: where your code lives), Transport (TCP/UDP: how it is delivered) and Network (IP: where it goes).'),
+      visual: { type: 'grid', items: [{ badge: '7', title: t('Aplicación', 'Application'), desc: 'HTTP · HTTPS · WebSocket', color: '#7c6cff' }, { badge: '4', title: t('Transporte', 'Transport'), desc: t('TCP (garantiza) · UDP (rápido)', 'TCP (guarantees) · UDP (fast)'), color: '#4cc9f0' }, { badge: '3', title: t('Red', 'Network'), desc: t('IP: enrutar entre máquinas', 'IP: routing between machines'), color: '#ff9f43' }] },
+    },
+    { kind: 'concept', emoji: '✉️', title: t('Sobres dentro de sobres', 'Envelopes inside envelopes'), body: t('Cada capa mete el mensaje en su propio sobre al enviar y lo saca al recibir. Recorre el viaje completo:', 'Each layer puts the message in its own envelope when sending and takes it out when receiving. Walk through the full journey:'), visual: { type: 'sim', id: 'osi' } },
+    {
+      kind: 'concept',
+      emoji: '📦',
+      title: t('TCP vs UDP', 'TCP vs UDP'),
+      body: t('TCP garantiza que todo llegue y en orden (webs, APIs, pagos). UDP es más rápido pero no garantiza nada (videollamadas, juegos): un pixel perdido no importa, el retraso sí.', 'TCP guarantees everything arrives in order (websites, APIs, payments). UDP is faster but guarantees nothing (video calls, games): a lost pixel does not matter, delay does.'),
+      visual: { type: 'sim', id: 'tcpUdp' },
+    },
+    { kind: 'check', exercise: { type: 'mcq', q: t('Estás construyendo un juego online en tiempo real. ¿Qué protocolo de transporte se usa normalmente?', 'You are building a real-time online game. Which transport protocol is usually used?'), options: ['UDP', 'TCP', 'DNS', 'SQL'], answer: 0, explain: t('Velocidad > perfección. Un dato viejo es inútil igual.', 'Speed > perfection. Stale data is useless anyway.') } },
+    {
+      kind: 'concept',
+      emoji: '📞',
+      title: t('WebSockets: la línea abierta', 'WebSockets: the open line'),
+      body: t('HTTP es como enviar cartas: el cliente pregunta y el servidor responde. ¿Y un chat o notificaciones en vivo? WebSocket deja la conexión abierta y ambos pueden hablar cuando quieran, como una llamada telefónica.', 'HTTP is like sending letters: the client asks and the server answers. What about a chat or live notifications? WebSocket keeps the connection open and both can talk whenever they want, like a phone call.'),
+      visual: { type: 'sim', id: 'websocket' },
+      code: { lang: 'ts', src: "// Cliente\nconst ws = new WebSocket('wss://chat.miapp.com');\nws.onmessage = (e: MessageEvent) => mostrar(e.data); // el servidor me avisa\nws.send('¡Hola a todos!');\n\n// Servidor (librería ws)\nwss.on('connection', (socket) => {\n  socket.on('message', (msg) => broadcast(msg.toString()));\n});", dotnet: { lang: 'csharp', src: "// En .NET lo habitual es SignalR (usa WebSockets por debajo)\npublic class ChatHub : Hub\n{\n    public Task SendMessage(string message)\n        => Clients.All.SendAsync(\"ReceiveMessage\", message); // avisa a todos al instante\n}\n\n// Program.cs\nbuilder.Services.AddSignalR();\napp.MapHub<ChatHub>(\"/chat\");" } },
+    },
+    {
+      kind: 'concept',
+      emoji: '⚖️',
+      title: t('Balanceo de carga: más cajas en el súper', 'Load balancing: more checkout lines'),
+      body: t('Cuando un servidor no da abasto, pones varios y un balanceador delante que reparte los requests. Estrategias: por turnos (round-robin), al menos ocupado (least connections) o siempre el mismo para el mismo usuario (IP hash).', 'When one server cannot keep up, you add more and put a load balancer in front that distributes requests. Strategies: taking turns (round-robin), the least busy (least connections), or always the same one for the same user (IP hash).'),
+      visual: { type: 'sim', id: 'loadBalancer' },
+    },
+    { kind: 'check', exercise: { type: 'match', q: t('Une cada estrategia de balanceo', 'Match each load-balancing strategy'), pairs: [['Round-robin', t('Por turnos: 1, 2, 3, 1, 2, 3…', 'Taking turns: 1, 2, 3, 1, 2, 3…')], ['Least connections', t('Al servidor menos ocupado', 'To the least busy server')], ['IP hash', t('Mismo usuario → mismo servidor', 'Same user → same server')]], explain: t('Tres formas de repartir.', 'Three ways to distribute.') } },
+    {
+      kind: 'recap',
+      points: [
+        t('🧅 Aplicación (HTTP) · Transporte (TCP/UDP) · Red (IP).', '🧅 Application (HTTP) · Transport (TCP/UDP) · Network (IP).'),
+        t('📮 TCP garantiza · 📢 UDP es rápido.', '📮 TCP guarantees · 📢 UDP is fast.'),
+        t('📞 WebSocket = conexión abierta para tiempo real.', '📞 WebSocket = open connection for real time.'),
+        t('⚖️ Balanceador = reparte requests entre varios servidores.', '⚖️ Load balancer = distributes requests across servers.'),
+      ],
+    },
+  ],
+  practice: [
+    { type: 'mcq', q: t('¿En qué capa vive HTTP?', 'Which layer does HTTP live in?'), options: [t('Aplicación', 'Application'), t('Transporte', 'Transport'), t('Red', 'Network'), t('Física', 'Physical')], answer: 0, explain: t('Ahí vive tu código.', 'That is where your code lives.') },
+    { type: 'match', q: t('¿Qué usarías?', 'What would you use?'), pairs: [[t('Chat en vivo', 'Live chat'), 'WebSocket'], [t('Videollamada', 'Video call'), 'UDP'], [t('Pago con tarjeta', 'Card payment'), 'TCP'], [t('Mucho tráfico', 'Heavy traffic'), t('Balanceador de carga', 'Load balancer')]], explain: t('Cada problema, su herramienta.', 'Each problem, its tool.') },
+    { type: 'tf', q: t('Con HTTP normal, el servidor puede enviarte un mensaje sin que se lo pidas.', 'With plain HTTP, the server can send you a message without you asking.'), answer: false, explain: t('En HTTP el cliente siempre pregunta primero. Para eso existen los WebSockets.', 'In HTTP the client always asks first. That is what WebSockets are for.') },
+    { type: 'order', q: t('Ordena cómo se envuelve un mensaje al enviarlo', 'Order how a message is wrapped when sending'), items: [t('Datos de la app', 'App data'), t('Aplicación: request HTTP', 'Application: HTTP request'), t('Transporte: segmento TCP con puertos', 'Transport: TCP segment with ports'), t('Red: paquete IP con direcciones', 'Network: IP packet with addresses')], explain: t('De adentro hacia afuera.', 'From the inside out.') },
+    { type: 'mcq', q: t('Uno de tus 3 servidores se apaga. ¿Qué hace el balanceador?', 'One of your 3 servers goes down. What does the load balancer do?'), options: [t('Deja de enviarle tráfico y reparte entre los otros 2', 'Stops sending it traffic and splits between the other 2'), t('Se apaga también', 'Shuts down too'), t('Envía todo al servidor apagado', 'Sends everything to the dead server'), t('Borra la base de datos', 'Deletes the database')], answer: 0, explain: t('Health checks: el balanceador evita servidores caídos.', 'Health checks: the balancer avoids dead servers.') },
+    {
+      type: 'code',
+      q: t('Implementa round-robin: "makeRoundRobin(servers)" devuelve una función next() que devuelve los servidores por turnos.', 'Implement round-robin: "makeRoundRobin(servers)" returns a next() function that returns servers in turns.'),
+      fn: 'makeRoundRobin',
+      starter: "function makeRoundRobin<T>(servers: T[]): () => T {\n  let i = 0;\n  return function next(): T {\n    // tu código\n  };\n}",
+      solution: "function makeRoundRobin<T>(servers: T[]): () => T {\n  let i = 0;\n  return function next(): T {\n    const s = servers[i % servers.length];\n    i++;\n    return s;\n  };\n}",
+      csharp: "public class RoundRobin<T>(IReadOnlyList<T> servers)\n{\n    private int _i;\n    public T Next() => servers[Interlocked.Increment(ref _i) % servers.Count]; // seguro entre hilos\n}",
+      tests: [{ call: '(() => { const next = makeRoundRobin(["A", "B", "C"]); return [next(), next(), next(), next(), next()]; })()', expect: ['A', 'B', 'C', 'A', 'B'], label: t('A, B, C, A, B', 'A, B, C, A, B') }],
+      explain: t('El operador % (módulo) hace que el índice vuelva a 0: el truco clásico del "por turnos".', 'The % (modulo) operator wraps the index back to 0: the classic "take turns" trick.'),
+    },
+  ],
+  labs: [
+    { id: 'net-osi', sim: 'osi', title: t('Capas de red', 'Network layers'), desc: t('Envuelve y desenvuelve un paquete.', 'Wrap and unwrap a packet.') },
+    { id: 'net-ws', sim: 'websocket', title: t('Polling vs WebSocket', 'Polling vs WebSocket'), desc: t('Compara los retrasos de cada uno.', 'Compare the delays of each.') },
+    { id: 'net-lb', sim: 'loadBalancer', title: t('Balanceador de carga', 'Load balancer'), desc: t('Estrategias y servidores caídos.', 'Strategies and dead servers.') },
+  ],
+  cards: [
+    { id: 'net-1', emoji: '🧅', front: t('Las 3 capas OSI que importan en backend', 'The 3 OSI layers that matter for backend'), back: t('Aplicación (HTTP/WebSocket) · Transporte (TCP/UDP) · Red (IP)', 'Application (HTTP/WebSocket) · Transport (TCP/UDP) · Network (IP)') },
+    { id: 'net-2', emoji: '📮', front: 'TCP vs UDP', back: t('TCP: entrega garantizada y ordenada (web, APIs).\nUDP: rápido, sin garantías (video, juegos).', 'TCP: guaranteed, ordered delivery (web, APIs).\nUDP: fast, no guarantees (video, games).') },
+    { id: 'net-3', emoji: '📞', front: 'WebSocket', back: t('Conexión persistente: cliente y servidor se envían mensajes cuando quieran. Para chats, notificaciones, marcadores en vivo.', 'Persistent connection: client and server message each other anytime. For chats, notifications, live scores.') },
+    { id: 'net-4', emoji: '✉️', front: t('HTTP vs WebSocket (analogía)', 'HTTP vs WebSocket (analogy)'), back: t('HTTP = cartas (preguntar y esperar respuesta).\nWebSocket = llamada telefónica (línea abierta).', 'HTTP = letters (ask and wait for an answer).\nWebSocket = phone call (open line).') },
+    { id: 'net-5', emoji: '⚖️', front: t('Balanceador de carga', 'Load balancer'), back: t('Reparte requests entre varios servidores. Estrategias: round-robin, least connections, IP hash.', 'Distributes requests across servers. Strategies: round-robin, least connections, IP hash.') },
+  ],
+};

@@ -1,0 +1,164 @@
+import { useEffect, useState } from 'react';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { AnimatePresence, motion } from 'motion/react';
+import { useLang } from '../i18n/lang';
+import { getModule } from '../content';
+import { addXp, completeLesson, getProgress, setLessonStep } from '../store/progress';
+import type { Step } from '../types';
+import { Visual } from '../components/visuals/Visual';
+import { CodeBlock } from '../components/visuals/CodeBlock';
+import { Exercise } from '../components/exercises/Exercise';
+
+function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => void }) {
+  const { tr, tx } = useLang();
+  if (step.kind === 'check') {
+    return (
+      <div className="card">
+        <div className="pill yellow" style={{ marginBottom: 12 }}>⚡ {tx('Comprueba rápido', 'Quick check')}</div>
+        <Exercise ex={step.exercise} onResult={onCheck} />
+      </div>
+    );
+  }
+  if (step.kind === 'recap') {
+    return (
+      <div className="card">
+        <div style={{ fontSize: '2.6rem' }}>🧩</div>
+        <h2>{tx('Resumen: léelo en voz alta', 'Summary: read it out loud')}</h2>
+        <p className="muted small">{tx('Decirlo en voz alta activa otra parte del cerebro. Tápate la pantalla e intenta repetir cada punto.', 'Saying it out loud activates another part of the brain. Cover the screen and try to repeat each point.')}</p>
+        <div className="stack">
+          {step.points.map((p, i) => (
+            <motion.div key={i} className="panel bold" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 + i * 0.35 }}>
+              {tr(p)}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="stack" style={{ gap: 18 }}>
+      <div>
+        {step.emoji && <div style={{ fontSize: '2.8rem', lineHeight: 1.1 }}>{step.emoji}</div>}
+        <h1 style={{ fontSize: 'clamp(1.5rem, 3.6vw, 2.2rem)', marginTop: 8 }}>{tr(step.title)}</h1>
+        <p style={{ fontSize: '1.12rem' }}>{tr(step.body)}</p>
+      </div>
+      {step.visual && <Visual v={step.visual} />}
+      {step.analogy && (
+        <div className="analogy">
+          <div className="real">
+            <div className="lbl" style={{ color: 'var(--orange)' }}>🌍 {tx('En el mundo real', 'In the real world')}</div>
+            <div>{tr(step.analogy.real)}</div>
+          </div>
+          <div className="prog">
+            <div className="lbl" style={{ color: 'var(--blue)' }}>💻 {tx('En programación', 'In programming')}</div>
+            <div>{tr(step.analogy.code)}</div>
+          </div>
+        </div>
+      )}
+      {step.code && <CodeBlock snippet={step.code} />}
+      {step.tip && <div className="tip">💡 {tr(step.tip)}</div>}
+    </div>
+  );
+}
+
+export function LessonPage() {
+  const { id } = useParams();
+  const { tr, tx } = useLang();
+  const nav = useNavigate();
+  const m = getModule(id);
+  const [i, setI] = useState(() => (m ? Math.min(getProgress().lessons[m.id]?.step ?? 0, m.lesson.length - 1) : 0));
+  const [checked, setChecked] = useState<Record<number, boolean>>({});
+  const [finished, setFinished] = useState(false);
+
+  useEffect(() => {
+    if (m && !finished) setLessonStep(m.id, i);
+  }, [i, m, finished]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
+  if (!m) return <Navigate to="/modules" replace />;
+  const step = m.lesson[i];
+  const isCheck = step.kind === 'check';
+  const blocked = isCheck && !(i in checked);
+  const last = i === m.lesson.length - 1;
+
+  function go(d: number, force = false) {
+    if (!m) return;
+    if (d > 0 && blocked && !force) return;
+    if (d > 0 && last) {
+      completeLesson(m.id, m.cards.map((c) => c.id));
+      setFinished(true);
+      return;
+    }
+    setI((x) => Math.max(0, Math.min(m.lesson.length - 1, x + d)));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (finished) {
+    return (
+      <div className="container narrow mt-lg">
+        <motion.div className="card center stack" initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ alignItems: 'center', padding: 40 }}>
+          <div style={{ fontSize: '4rem' }}>🎉</div>
+          <h1>{tx('¡Lección completada!', 'Lesson completed!')}</h1>
+          <p className="muted" style={{ maxWidth: 520 }}>
+            {tx(
+              `Acabas de VER "${tr(m.title)}". Sus ${m.cards.length} tarjetas ya están en tu repaso diario. Ahora toca repetir para que se quede.`,
+              `You just SAW "${tr(m.title)}". Its ${m.cards.length} cards are now in your daily review. Now it is time to repeat so it sticks.`,
+            )}
+          </p>
+          <div className="row center">
+            <Link className="btn btn-primary btn-lg" to={`/m/${m.id}/practice`}>🔁 {tx('Practicar ahora', 'Practice now')}</Link>
+            <Link className="btn btn-lg" to={`/m/${m.id}/labs`}>🧪 {tx('Laboratorios', 'Labs')}</Link>
+          </div>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setFinished(false); setI(0); setChecked({}); }}>↺ {tx('Ver la lección otra vez', 'Watch the lesson again')}</button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="lesson-shell">
+      <div className="container narrow">
+        <div className="lesson-top">
+          <button className="btn btn-ghost btn-sm" onClick={() => nav(`/m/${m.id}`)} aria-label={tx('Salir', 'Exit')}>✕</button>
+          <div className="progress grow">
+            <div style={{ width: `${((i + 1) / m.lesson.length) * 100}%` }} />
+          </div>
+          <span className="small mono bold">{i + 1}/{m.lesson.length}</span>
+        </div>
+        <div className="lesson-body">
+          <AnimatePresence mode="wait">
+            <motion.div key={i} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.25 }}>
+              <StepView
+                step={step}
+                onCheck={(ok) => {
+                  setChecked((c) => ({ ...c, [i]: ok }));
+                  if (ok) addXp(5);
+                  go(1, true);
+                }}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+      <div className="lesson-footer">
+        <div className="container narrow row between">
+          <button className="btn" onClick={() => go(-1)} disabled={i === 0}>← {tx('Atrás', 'Back')}</button>
+          <span className="tiny faint hide-mobile">{tx('Usa las flechas ← → del teclado', 'Use the ← → arrow keys')}</span>
+          <button className="btn btn-primary btn-lg" onClick={() => go(1)} disabled={blocked}>
+            {blocked ? tx('Responde para seguir', 'Answer to continue') : last ? tx('Terminar 🎉', 'Finish 🎉') : `${tx('Siguiente', 'Next')} →`}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

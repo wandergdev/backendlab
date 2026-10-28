@@ -1,0 +1,80 @@
+import { t, type Module } from '../../types';
+
+export const git: Module = {
+  id: 'git',
+  num: 14,
+  emoji: '🌳',
+  color: '#ff6b81',
+  title: t('Control de versiones (Git)', 'Version control (Git)'),
+  tagline: t('Repositorio, commit, ramas, merge, push y pull requests', 'Repository, commit, branches, merge, push and pull requests'),
+  formula: {
+    pieces: [
+      { label: 'add', emoji: '📦' },
+      { label: 'commit', emoji: '📸' },
+      { label: 'push', emoji: '☁️' },
+    ],
+    result: t('Código a salvo en GitHub', 'Code safe on GitHub'),
+  },
+  lesson: [
+    {
+      kind: 'concept',
+      emoji: '🕰️',
+      title: t('Git: la máquina del tiempo de tu código', 'Git: your code’s time machine'),
+      body: t('Git guarda "fotos" de tu proyecto a lo largo del tiempo. Si rompes algo, vuelves atrás. Si trabajas en equipo, cada uno trabaja en su versión y luego se juntan. No es opcional: todos los trabajos lo piden.', 'Git saves "snapshots" of your project over time. If you break something, you go back. If you work in a team, each person works on their version and then they are combined. It is not optional: every job requires it.'),
+      analogy: { real: t('Los puntos de guardado de un videojuego: guardas antes del jefe final; si pierdes, vuelves al punto de guardado.', 'Video game save points: you save before the final boss; if you lose, you go back to the save point.'), code: t('git commit = punto de guardado con un mensaje: "Añadir login".', 'git commit = save point with a message: "Add login".') },
+    },
+    {
+      kind: 'concept',
+      emoji: '📦',
+      title: t('Los 4 lugares donde vive tu código', 'The 4 places your code lives'),
+      body: t('Tu carpeta → (git add) → zona de preparación → (git commit) → historial → (git push) → GitHub. Cada comando mueve los cambios un paso a la derecha.', 'Your folder → (git add) → staging area → (git commit) → history → (git push) → GitHub. Each command moves the changes one step to the right.'),
+      visual: { type: 'blocks', pieces: [{ label: t('Carpeta', 'Folder'), emoji: '📝' }, { label: 'git add', emoji: '📦' }, { label: 'git commit', emoji: '📸' }, { label: 'git push', emoji: '☁️' }], result: 'GitHub', resultEmoji: '🐙' },
+    },
+    {
+      kind: 'concept',
+      emoji: '🧩',
+      title: t('Conceptos clave', 'Key concepts'),
+      body: t('Seis palabras que escucharás en cualquier equipo:', 'Six words you will hear in any team:'),
+      visual: { type: 'grid', items: [{ badge: '📁', title: t('Repositorio', 'Repository'), desc: t('Tu proyecto rastreado por Git', 'Your project tracked by Git'), color: '#7c6cff' }, { badge: '📸', title: 'Commit', desc: t('Una foto del código + mensaje', 'A snapshot of the code + message'), color: '#4cc9f0' }, { badge: '🌿', title: t('Rama (branch)', 'Branch'), desc: t('Una versión paralela para trabajar sin tocar main', 'A parallel version to work without touching main'), color: '#00d29a' }, { badge: '🔀', title: 'Merge', desc: t('Unir una rama con otra', 'Combine one branch into another'), color: '#ffd166' }, { badge: '☁️', title: 'Push / Pull', desc: t('Subir / bajar cambios de GitHub', 'Upload / download changes to/from GitHub'), color: '#ff9f43' }, { badge: '🙋', title: 'Pull Request', desc: t('Propuesta para unir tus cambios, revisada por el equipo', 'Proposal to merge your changes, reviewed by the team'), color: '#ff6b81' }] },
+    },
+    { kind: 'check', exercise: { type: 'order', q: t('Ordena para guardar y subir tus cambios', 'Order to save and upload your changes'), items: ['git add .', 'git commit -m "Add login"', 'git push origin main'], explain: t('Preparar → fotografiar → subir.', 'Stage → snapshot → upload.') } },
+    {
+      kind: 'concept',
+      emoji: '🌿',
+      title: t('Ramas: trabajar sin romper main', 'Branches: work without breaking main'),
+      body: t('main es la versión lista para producción. Para cada funcionalidad creas una rama, trabajas tranquilo y, cuando está lista (y revisada en un Pull Request), la fusionas con main. Nunca hagas commit directo a main.', 'main is the production-ready version. For each feature you create a branch, work calmly and, when it is ready (and reviewed in a Pull Request), you merge it into main. Never commit directly to main.'),
+      code: { lang: 'bash', src: 'git checkout -b feature-login   # crear rama y cambiarte a ella\n# … trabajas, haces commits …\ngit checkout main               # volver a main\ngit merge feature-login         # traer los cambios de la rama' },
+    },
+    { kind: 'concept', emoji: '🎮', title: t('Hazlo tú y MIRA el árbol crecer', 'Do it yourself and WATCH the tree grow'), body: t('Cada comando dibuja el historial en vivo. Sigue las pistas: init → add → commit → rama → commit → volver → merge → push.', 'Each command draws the history live. Follow the hints: init → add → commit → branch → commit → go back → merge → push.'), visual: { type: 'sim', id: 'git' } },
+    { kind: 'check', exercise: { type: 'mcq', q: t('¿Qué hace "git checkout -b feature-x"?', 'What does "git checkout -b feature-x" do?'), options: [t('Crea la rama feature-x y te cambia a ella', 'Creates the feature-x branch and switches to it'), t('Borra la rama feature-x', 'Deletes the feature-x branch'), t('Sube feature-x a GitHub', 'Pushes feature-x to GitHub'), t('Fusiona feature-x con main', 'Merges feature-x into main')], answer: 0, explain: t('-b = crear y cambiar en un paso.', '-b = create and switch in one step.') } },
+    {
+      kind: 'recap',
+      points: [
+        t('🕰️ Git = historial de tu código (puntos de guardado).', '🕰️ Git = your code’s history (save points).'),
+        t('📦 add prepara · 📸 commit guarda · ☁️ push sube.', '📦 add stages · 📸 commit saves · ☁️ push uploads.'),
+        t('🌿 Una rama por funcionalidad. main = producción.', '🌿 One branch per feature. main = production.'),
+        t('🔀 merge une ramas · 🙋 Pull Request = revisión antes de unir.', '🔀 merge combines branches · 🙋 Pull Request = review before merging.'),
+      ],
+    },
+  ],
+  practice: [
+    { type: 'type', q: t('¿Qué comando empieza a rastrear un proyecto con Git?', 'Which command starts tracking a project with Git?'), accept: ['git init'], explain: 'git init' },
+    { type: 'type', q: t('¿Qué comando muestra qué archivos cambiaron?', 'Which command shows which files changed?'), accept: ['git status'], explain: 'git status' },
+    { type: 'fill', q: t('Guarda tus cambios con un mensaje', 'Save your changes with a message'), lang: 'bash', template: 'git ___ .\ngit ___ -m "Add login"', blanks: ['add', 'commit'], distractors: ['push', 'merge', 'init'], explain: t('add prepara, commit guarda.', 'add stages, commit saves.') },
+    { type: 'match', q: t('Une cada comando', 'Match each command'), pairs: [['git push', t('Subir a GitHub', 'Upload to GitHub')], ['git pull', t('Bajar los últimos cambios', 'Download latest changes')], ['git merge', t('Unir ramas', 'Combine branches')], ['git log --oneline', t('Ver el historial', 'See history')]], explain: t('Comandos del día a día.', 'Everyday commands.') },
+    { type: 'tf', q: t('Es buena práctica hacer commit directamente a main.', 'It is good practice to commit directly to main.'), answer: false, explain: t('Rama por funcionalidad + Pull Request.', 'Branch per feature + Pull Request.') },
+    { type: 'mcq', q: t('¿Qué es un Pull Request?', 'What is a Pull Request?'), options: [t('Una propuesta para unir tus cambios, que el equipo revisa', 'A proposal to merge your changes, reviewed by the team'), t('Descargar código', 'Downloading code'), t('Un tipo de commit', 'A kind of commit'), t('Borrar una rama', 'Deleting a branch')], answer: 0, explain: t('Revisión antes de fusionar.', 'Review before merging.') },
+    { type: 'order', q: t('Ordena el flujo de trabajo con ramas', 'Order the branch workflow'), items: ['git checkout -b feature-x', t('Haces cambios y commits', 'Make changes and commits'), 'git push origin feature-x', t('Abres un Pull Request', 'Open a Pull Request'), t('Se revisa y se hace merge a main', 'It is reviewed and merged into main')], explain: t('El flujo de casi cualquier empresa.', 'The flow of almost any company.') },
+  ],
+  labs: [{ id: 'git-sim', sim: 'git', title: t('Simulador de Git', 'Git simulator'), desc: t('8 misiones con el árbol de commits dibujándose en vivo.', '8 missions with the commit tree drawing live.') }],
+  cards: [
+    { id: 'git-1', emoji: '🌳', front: t('¿Qué es Git?', 'What is Git?'), back: t('Un sistema que guarda el historial de cambios de tu código (como puntos de guardado).', 'A system that keeps the history of changes to your code (like save points).') },
+    { id: 'git-2', emoji: '📸', front: 'Commit', back: t('Una foto del código en un momento, con un mensaje que explica el cambio.', 'A snapshot of the code at a moment, with a message explaining the change.') },
+    { id: 'git-3', emoji: '📦', front: 'git add', back: t('Prepara (stage) los cambios para el próximo commit.', 'Stages changes for the next commit.') },
+    { id: 'git-4', emoji: '🌿', front: t('Rama (branch)', 'Branch'), back: t('Versión paralela del código para trabajar sin afectar main.', 'Parallel version of the code to work without affecting main.') },
+    { id: 'git-5', emoji: '🔀', front: 'Merge', back: t('Unir los cambios de una rama en otra.', 'Combining changes from one branch into another.') },
+    { id: 'git-6', emoji: '☁️', front: 'push / pull', back: t('push: subir tus commits a GitHub.\npull: bajar los cambios de otros.', 'push: upload your commits to GitHub.\npull: download others’ changes.') },
+    { id: 'git-7', emoji: '🙋', front: 'Pull Request', back: t('Propuesta para unir tu rama a main; el equipo la revisa antes.', 'Proposal to merge your branch into main; the team reviews it first.') },
+    { id: 'git-8', emoji: '🧭', front: t('Estrategia de ramas más común', 'Most common branching strategy'), back: t('main = producción. Una rama por funcionalidad. Merge vía Pull Request. Nunca commit directo a main.', 'main = production. One branch per feature. Merge via Pull Request. Never commit directly to main.') },
+  ],
+};
