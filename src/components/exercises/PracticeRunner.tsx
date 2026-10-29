@@ -4,6 +4,7 @@ import type { Exercise as Ex } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { addXp } from '../../store/progress';
 import { Exercise } from './Exercise';
+import { Ic, IcTile } from '../ui/Icon';
 
 type Item = { ex: Ex; key: string; retry: boolean };
 
@@ -50,7 +51,7 @@ export function PracticeRunner({ exercises, onFinish, title }: { exercises: Ex[]
     const missed = total - Object.values(firstTry).filter(Boolean).length;
     return (
       <motion.div className="card center stack" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ alignItems: 'center', padding: 36 }}>
-        <div style={{ fontSize: '4rem' }}>{score >= 90 ? '🏆' : score >= 70 ? '🌟' : '💪'}</div>
+        <IcTile n={score >= 90 ? 'trophy' : score >= 70 ? 'star' : 'muscle'} color={score >= 70 ? 'var(--yellow)' : 'var(--primary-2)'} size={84} />
         <h2>{tx('¡Sesión completada!', 'Session complete!')}</h2>
         <div style={{ fontSize: '2.4rem', fontWeight: 900, color: score >= 80 ? 'var(--green)' : 'var(--yellow)' }}>{score}%</div>
         <div className="muted">{tx('acertados a la primera', 'right on the first try')}</div>
@@ -65,7 +66,7 @@ export function PracticeRunner({ exercises, onFinish, title }: { exercises: Ex[]
             setRound((r) => r + 1);
           }}
         >
-          ↺ {tx('Practicar otra vez', 'Practice again')}
+          <Ic n="reset" /> {tx('Practicar otra vez', 'Practice again')}
         </button>
       </motion.div>
     );
@@ -82,7 +83,7 @@ export function PracticeRunner({ exercises, onFinish, title }: { exercises: Ex[]
           {doneKeys.size}/{total}
         </span>
       </div>
-      {current.retry && <div className="pill yellow" style={{ alignSelf: 'flex-start' }}>🔁 {tx('Repaso: este lo fallaste antes', 'Review: you missed this one before')}</div>}
+      {current.retry && <div className="pill yellow" style={{ alignSelf: 'flex-start' }}><Ic n="repeat" size={16} /> {tx('Repaso: este lo fallaste antes', 'Review: you missed this one before')}</div>}
       <motion.div key={round} initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="card">
         <Exercise ex={current.ex} onResult={handle} />
       </motion.div>

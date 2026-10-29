@@ -1,16 +1,17 @@
 import { useLang } from '../i18n/lang';
 import { RoadmapSim } from '../components/sims/Roadmap';
 import { resetProgress } from '../store/progress';
+import { Ic, IcTile } from '../components/ui/Icon';
 
 export function Roadmap() {
   const { tx } = useLang();
   return (
     <div className="container narrow mt-lg">
-      <h1>🗺️ {tx('Tu hoja de ruta', 'Your roadmap')}</h1>
+      <h1 className="h-icon"><Ic n="map" size={36} /> {tx('Tu hoja de ruta', 'Your roadmap')}</h1>
       <p className="muted">{tx('El orden que tiene sentido. No te saltes fases. Marca lo que vayas dominando: se guarda en este navegador.', 'The order that makes sense. Do not skip phases. Check off what you master: it is saved in this browser.')}</p>
       <RoadmapSim />
       <div className="card mt-lg center" style={{ borderColor: 'var(--primary)', borderWidth: 2 }}>
-        <div style={{ fontSize: '2.4rem' }}>🎯</div>
+        <IcTile n="target" color="var(--red)" />
         <h2>{tx('La gran lección', 'The big takeaway')}</h2>
         <p className="muted">
           {tx(
@@ -29,7 +30,7 @@ export function Roadmap() {
             if (window.confirm(tx('¿Borrar todo tu progreso? No se puede deshacer.', 'Delete all your progress? This cannot be undone.'))) resetProgress();
           }}
         >
-          🗑️ {tx('Reiniciar todo mi progreso', 'Reset all my progress')}
+          <Ic n="trash" size={18} /> {tx('Reiniciar todo mi progreso', 'Reset all my progress')}
         </button>
       </div>
     </div>

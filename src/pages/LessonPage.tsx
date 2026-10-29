@@ -9,13 +9,14 @@ import { Visual } from '../components/visuals/Visual';
 import { CodeBlock } from '../components/visuals/CodeBlock';
 import { Exercise } from '../components/exercises/Exercise';
 import { Glyph } from '../components/ui/Icon';
+import { Ic, IcTile } from '../components/ui/Icon';
 
 function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => void }) {
   const { tr, tx } = useLang();
   if (step.kind === 'check') {
     return (
       <div className="card">
-        <div className="pill yellow" style={{ marginBottom: 12 }}>⚡ {tx('Comprueba rápido', 'Quick check')}</div>
+        <div className="pill yellow" style={{ marginBottom: 12 }}><Ic n="lightning" size={16} /> {tx('Comprueba rápido', 'Quick check')}</div>
         <Exercise ex={step.exercise} onResult={onCheck} />
       </div>
     );
@@ -23,7 +24,7 @@ function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => voi
   if (step.kind === 'recap') {
     return (
       <div className="card">
-        <div style={{ fontSize: '2.6rem' }}>🧩</div>
+        <IcTile n="puzzle" />
         <h2>{tx('Resumen: léelo en voz alta', 'Summary: read it out loud')}</h2>
         <p className="muted small">{tx('Decirlo en voz alta activa otra parte del cerebro. Tápate la pantalla e intenta repetir cada punto.', 'Saying it out loud activates another part of the brain. Cover the screen and try to repeat each point.')}</p>
         <div className="stack">
@@ -47,17 +48,17 @@ function StepView({ step, onCheck }: { step: Step; onCheck: (ok: boolean) => voi
       {step.analogy && (
         <div className="analogy">
           <div className="real">
-            <div className="lbl" style={{ color: 'var(--orange)' }}>🌍 {tx('En el mundo real', 'In the real world')}</div>
+            <div className="lbl ic" style={{ color: 'var(--orange)' }}><Ic n="globe" size={18} /> {tx('En el mundo real', 'In the real world')}</div>
             <div>{tr(step.analogy.real)}</div>
           </div>
           <div className="prog">
-            <div className="lbl" style={{ color: 'var(--blue)' }}>💻 {tx('En programación', 'In programming')}</div>
+            <div className="lbl ic" style={{ color: 'var(--blue)' }}><Ic n="code" size={18} /> {tx('En programación', 'In programming')}</div>
             <div>{tr(step.analogy.code)}</div>
           </div>
         </div>
       )}
       {step.code && <CodeBlock snippet={step.code} />}
-      {step.tip && <div className="tip">💡 {tr(step.tip)}</div>}
+      {step.tip && <div className="tip ic" style={{ alignItems: 'flex-start' }}><Ic n="bulb" size={22} color="var(--yellow)" /> <span>{tr(step.tip)}</span></div>}
     </div>
   );
 }
@@ -108,7 +109,7 @@ export function LessonPage() {
     return (
       <div className="container narrow mt-lg">
         <motion.div className="card center stack" initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ alignItems: 'center', padding: 40 }}>
-          <div style={{ fontSize: '4rem' }}>🎉</div>
+          <IcTile n="celebrate" color="var(--green)" size={88} />
           <h1>{tx('¡Lección completada!', 'Lesson completed!')}</h1>
           <p className="muted" style={{ maxWidth: 520 }}>
             {tx(
@@ -117,10 +118,10 @@ export function LessonPage() {
             )}
           </p>
           <div className="row center">
-            <Link className="btn btn-primary btn-lg" to={`/m/${m.id}/practice`}>🔁 {tx('Practicar ahora', 'Practice now')}</Link>
-            <Link className="btn btn-lg" to={`/m/${m.id}/labs`}>🧪 {tx('Laboratorios', 'Labs')}</Link>
+            <Link className="btn btn-primary btn-lg" to={`/m/${m.id}/practice`}><Ic n="repeat" /> {tx('Practicar ahora', 'Practice now')}</Link>
+            <Link className="btn btn-lg" to={`/m/${m.id}/labs`}><Ic n="flask" /> {tx('Laboratorios', 'Labs')}</Link>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={() => { setFinished(false); setI(0); setChecked({}); }}>↺ {tx('Ver la lección otra vez', 'Watch the lesson again')}</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setFinished(false); setI(0); setChecked({}); }}><Ic n="reset" size={18} /> {tx('Ver la lección otra vez', 'Watch the lesson again')}</button>
         </motion.div>
       </div>
     );
@@ -130,7 +131,7 @@ export function LessonPage() {
     <div className="lesson-shell">
       <div className="container narrow">
         <div className="lesson-top">
-          <button className="btn btn-ghost btn-sm" onClick={() => nav(`/m/${m.id}`)} aria-label={tx('Salir', 'Exit')}>✕</button>
+          <button className="btn btn-ghost icon-btn" onClick={() => nav(`/m/${m.id}`)} aria-label={tx('Salir de la lección', 'Exit lesson')}><Ic n="x" size={22} /></button>
           <div className="progress grow">
             <div style={{ width: `${((i + 1) / m.lesson.length) * 100}%` }} />
           </div>
@@ -153,10 +154,10 @@ export function LessonPage() {
       </div>
       <div className="lesson-footer">
         <div className="container narrow row between">
-          <button className="btn" onClick={() => go(-1)} disabled={i === 0}>← {tx('Atrás', 'Back')}</button>
+          <button className="btn" onClick={() => go(-1)} disabled={i === 0}><Ic n="left" size={18} /> {tx('Atrás', 'Back')}</button>
           <span className="tiny faint hide-mobile">{tx('Usa las flechas ← → del teclado', 'Use the ← → arrow keys')}</span>
           <button className="btn btn-primary btn-lg" onClick={() => go(1)} disabled={blocked}>
-            {blocked ? tx('Responde para seguir', 'Answer to continue') : last ? tx('Terminar 🎉', 'Finish 🎉') : `${tx('Siguiente', 'Next')} →`}
+            {blocked ? tx('Responde para seguir', 'Answer to continue') : last ? <><Ic n="celebrate" /> {tx('Terminar', 'Finish')}</> : <>{tx('Siguiente', 'Next')} <Ic n="right" size={18} weight="bold" /></>}
           </button>
         </div>
       </div>

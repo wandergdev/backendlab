@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import { motion } from 'motion/react';
 import type { BlockPiece, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
-import { Glyph } from '../ui/Icon';
+import { Glyph, Ic } from '../ui/Icon';
 
 const PALETTE = ['#7c6cff', '#4cc9f0', '#ff9f43', '#f78fb3', '#ffd166', '#00d29a'];
 
@@ -53,7 +53,7 @@ export function Blocks({ pieces, result, resultEmoji, compact = false }: { piece
       {!compact && (
         <div className="row center">
           <button className="btn btn-ghost btn-sm" onClick={() => setRun((r) => r + 1)}>
-            ↺ {tx('Ver otra vez', 'Watch again')}
+            <Ic n="reset" size={18} /> {tx('Ver otra vez', 'Watch again')}
           </button>
         </div>
       )}

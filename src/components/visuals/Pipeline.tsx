@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import type { PipeStage, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
-import { Glyph } from '../ui/Icon';
+import { Glyph, Ic } from '../ui/Icon';
 
 /**
  * Una "línea de ensamblaje": algo (un request, un pedido, un commit) pasa por estaciones.
@@ -63,14 +63,14 @@ export function Pipeline({ item, itemEmoji, stages, success, vertical = true, on
                       <span className={`pill ${pass[i] ? 'green' : 'red'}`}>{pass[i] ? tx('sí', 'yes') : 'no'}</span>
                     </label>
                   )}
-                  {failedHere && s.gate && <div className="small bold" style={{ color: 'var(--red)', marginTop: 4 }}>⛔ {tr(s.gate.failResult)}</div>}
+                  {failedHere && s.gate && <div className="small bold" style={{ color: 'var(--red)', marginTop: 4, display: 'flex', gap: 6, alignItems: 'center' }}><Ic n="stop" size={16} /> {tr(s.gate.failResult)}</div>}
                 </div>
                 {isHere && running && (
                   <motion.div layoutId="pipe-token" style={{ fontSize: '1.5rem' }} transition={{ type: 'spring', stiffness: 300, damping: 25 }}>
                     {itemEmoji}
                   </motion.div>
                 )}
-                {passed && !isHere && <span style={{ color: 'var(--green)', fontWeight: 900 }}>✓</span>}
+                {passed && !isHere && <Ic n="checkCircle" size={22} color="var(--green)" />}
               </div>
               {vertical && i < stages.length - 1 && <div style={{ textAlign: 'center', color: 'var(--faint)', lineHeight: 1, margin: '2px 0' }}>↓</div>}
             </div>
@@ -79,7 +79,7 @@ export function Pipeline({ item, itemEmoji, stages, success, vertical = true, on
       </div>
       {finished && failIdx === -1 && pos >= stages.length && (
         <motion.div className="feedback ok mt" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-          ✅ {tr(success)}
+          <span className="ic"><Ic n="checkCircle" size={22} color="var(--green)" /> {tr(success)}</span>
         </motion.div>
       )}
       {stages.some((s) => s.gate) && <div className="tiny faint mt">{tx('Desmarca una condición y vuelve a enviar para ver dónde se detiene.', 'Uncheck a condition and send again to see where it stops.')}</div>}

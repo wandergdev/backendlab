@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import type { Card } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { reviewCard, useProgress } from '../../store/progress';
+import { Ic, IcTile } from '../ui/Icon';
 
 /**
  * Tarjetas de memoria con repetición espaciada (sistema Leitner):
@@ -36,14 +37,14 @@ export function CardDeck({ cards, onDone, srs = true }: { cards: Card[]; onDone?
   if (!card) {
     return (
       <div className="card center stack" style={{ alignItems: 'center', padding: 36 }}>
-        <div style={{ fontSize: '3.5rem' }}>🧠</div>
+        <IcTile n="brain" color="var(--pink)" size={80} />
         <h2>{tx('¡Mazo terminado!', 'Deck finished!')}</h2>
         <p className="muted">
           {tx(`${known} tarjetas dominadas · ${again} repeticiones extra`, `${known} cards mastered · ${again} extra repetitions`)}
         </p>
         <div className="row center">
           <button className="btn btn-primary" onClick={() => { setQueue([...cards].sort(() => Math.random() - 0.5)); setKnown(0); setAgain(0); }}>
-            ↺ {tx('Repasar otra vez', 'Review again')}
+            <Ic n="reset" /> {tx('Repasar otra vez', 'Review again')}
           </button>
           {onDone && <button className="btn" onClick={onDone}>{tx('Volver', 'Back')}</button>}
         </div>
@@ -73,11 +74,11 @@ export function CardDeck({ cards, onDone, srs = true }: { cards: Card[]; onDone?
       </div>
       {flipped ? (
         <div className="grid grid-2">
-          <button className="btn btn-red btn-lg" onClick={() => answer(false)}>🔁 {tx('Repasar otra vez', 'Show again')}</button>
-          <button className="btn btn-green btn-lg" onClick={() => answer(true)}>✅ {tx('Lo sabía', 'I knew it')}</button>
+          <button className="btn btn-red btn-lg" onClick={() => answer(false)}><Ic n="repeat" /> {tx('Repasar otra vez', 'Show again')}</button>
+          <button className="btn btn-green btn-lg" onClick={() => answer(true)}><Ic n="checkCircle" /> {tx('Lo sabía', 'I knew it')}</button>
         </div>
       ) : (
-        <button className="btn btn-primary btn-lg" onClick={() => setFlipped(true)}>{tx('Girar tarjeta', 'Flip card')} ↻</button>
+        <button className="btn btn-primary btn-lg" onClick={() => setFlipped(true)}><Ic n="flip" /> {tx('Girar tarjeta', 'Flip card')}</button>
       )}
     </div>
   );

@@ -59,3 +59,42 @@ export function ModuleIcon({ id, color, size = 56 }: { id: string; color: string
     </span>
   );
 }
+
+// ---------------------------------------------------------------------
+// Iconos de interfaz con nombres cortos: <Ic n="check" />
+// ---------------------------------------------------------------------
+import {
+  CheckIcon, XIcon, ConfettiIcon, LightbulbIcon, ArrowCounterClockwiseIcon, TrophyIcon, StarIcon, BarbellIcon, ArrowsClockwiseIcon,
+  ArrowLeftIcon, ArrowRightIcon, PlusIcon, DiceFiveIcon, SparkleIcon, EyeSlashIcon, TrashIcon, FireIcon, ClockIcon, UploadSimpleIcon,
+  CopyIcon, ShareNetworkIcon, FolderIcon, QuestionMarkIcon, HandWavingIcon, PlayIcon, PauseIcon, SkipForwardIcon, SkipBackIcon,
+  ProhibitIcon, CardsIcon, XCircleIcon, FlaskIcon, CodeIcon, ArrowsLeftRightIcon as SwapIcon,
+} from '@phosphor-icons/react';
+
+const UI: Record<string, PhIcon> = {
+  check: CheckIcon, checkCircle: CheckCircleIcon, x: XIcon, xCircle: XCircleIcon, celebrate: ConfettiIcon, repeat: RepeatIcon, bulb: LightbulbIcon,
+  reset: ArrowCounterClockwiseIcon, trophy: TrophyIcon, star: StarIcon, muscle: BarbellIcon, brain: BrainIcon, flip: ArrowsClockwiseIcon,
+  lightning: LightningIcon, puzzle: PuzzlePieceIcon, globe: GlobeHemisphereWestIcon, laptop: LaptopIcon, flask: FlaskIcon, code: CodeIcon,
+  left: ArrowLeftIcon, right: ArrowRightIcon, eye: EyeIcon, plus: PlusIcon, dice: DiceFiveIcon, box: PackageIcon, sparkle: SparkleIcon,
+  books: BooksIcon, eyeSlash: EyeSlashIcon, map: MapTrifoldIcon, target: TargetIcon, trash: TrashIcon, fire: FireIcon, clock: ClockIcon,
+  upload: UploadSimpleIcon, download: DownloadSimpleIcon, link: LinkIcon, copy: CopyIcon, share: ShareNetworkIcon, phone: DeviceMobileIcon,
+  folder: FolderIcon, swap: SwapIcon, question: QuestionMarkIcon, wave: HandWavingIcon, play: PlayIcon, pause: PauseIcon,
+  next: SkipForwardIcon, prev: SkipBackIcon, gear: GearIcon, stop: ProhibitIcon, cards: CardsIcon, chart: ChartLineUpIcon,
+  save: FloppyDiskIcon, warn: WarningIcon, stack: StackIcon, file: FileTsIcon, csharp: FileCSharpIcon, users: UsersThreeIcon,
+};
+
+export type IcName = keyof typeof UI;
+
+/** Icono de interfaz. Decorativo por defecto (aria-hidden); con `label` se anuncia a lectores de pantalla. */
+export function Ic({ n, size = 20, color, weight = 'duotone', label }: { n: IcName; size?: number; color?: string; weight?: 'duotone' | 'regular' | 'bold' | 'fill'; label?: string }) {
+  const I = UI[n];
+  return label ? <I size={size} color={color} weight={weight} role="img" aria-label={label} /> : <I size={size} color={color} weight={weight} aria-hidden style={{ flex: 'none' }} />;
+}
+
+/** Recuadro grande con icono (cabeceras de pantallas de resultado, estados vacíos…). */
+export function IcTile({ n, color = 'var(--primary-2)', size = 64 }: { n: IcName; color?: string; size?: number }) {
+  return (
+    <span className="icon-tile" style={{ width: size, height: size, color, ['--tile' as string]: color }} aria-hidden>
+      <Ic n={n} size={Math.round(size * 0.56)} />
+    </span>
+  );
+}

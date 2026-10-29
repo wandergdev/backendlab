@@ -10,7 +10,6 @@ import { LabDetail, Labs } from './pages/Labs';
 import { Glossary } from './pages/Glossary';
 import { Roadmap } from './pages/Roadmap';
 import { Progress, SyncImport } from './pages/Progress';
-import { IconPreview } from './pages/IconPreview';
 
 // HashRouter (#/ruta) permite publicar la web en cualquier hosting estático sin configurar el servidor.
 export default function App() {
@@ -33,7 +32,6 @@ export default function App() {
             <Route path="/roadmap" element={<Roadmap />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/sync" element={<SyncImport />} />
-            <Route path="/icons" element={<IconPreview />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>

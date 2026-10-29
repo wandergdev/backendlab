@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useLang } from '../../i18n/lang';
 import { STACKS, useStack, type Stack } from '../../i18n/stack';
 import { useProgress } from '../../store/progress';
+import { Ic, IcTile } from '../ui/Icon';
 
 /** Control de dos opciones, siempre visible, que deja claro qué stack se está mostrando. */
 export function StackSwitch() {
@@ -20,7 +21,7 @@ export function StackSwitch() {
           style={stack === st ? { background: STACKS[st].color, borderColor: STACKS[st].color } : undefined}
           onClick={() => setStack(st)}
         >
-          <span>{STACKS[st].emoji}</span>
+          <Ic n={st === 'node' ? 'file' : 'csharp'} size={18} weight={stack === st ? 'fill' : 'duotone'} />
           <span className="stack-opt-text">{STACKS[st].short}</span>
         </button>
       ))}
@@ -61,13 +62,13 @@ export function StackOnboarding() {
       {show && (
         <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <motion.div className="modal card" initial={{ y: 30, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 20, opacity: 0 }} role="dialog" aria-modal="true" aria-labelledby="stack-title">
-            <div style={{ fontSize: '2.4rem' }}>👋</div>
+            <IcTile n="wave" color="var(--yellow)" />
             <h2 id="stack-title" style={{ marginBottom: 4 }}>{tx('¿En qué lenguaje quieres ver los ejemplos?', 'Which language do you want to see the examples in?')}</h2>
             <p className="muted small">{tx('Los conceptos son los mismos en los dos. Esto solo cambia el código que verás en las lecciones.', 'The concepts are the same in both. This only changes the code you will see in the lessons.')}</p>
             <div className="grid grid-2">
               {CHOICES.map((c) => (
                 <button key={c.id} className="option" onClick={() => setStack(c.id)} style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6, padding: 16, borderColor: STACKS[c.id].color }}>
-                  <span style={{ fontSize: '1.8rem' }}>{STACKS[c.id].emoji}</span>
+                  <IcTile n={c.id === 'node' ? 'file' : 'csharp'} color={STACKS[c.id].color} size={52} />
                   <span className="bold">{c.title}</span>
                   <ul className="small muted" style={{ margin: 0, paddingLeft: 18, fontWeight: 600 }}>
                     {c.items.map((it) => (
@@ -78,8 +79,8 @@ export function StackOnboarding() {
               ))}
             </div>
             <div className="tip small mt">
-              💡 {tx('Puedes cambiarlo cuando quieras con el selector de la cabecera', 'You can change it anytime with the selector in the header')}{' '}
-              <span className="pill">{tx('Código:', 'Code:')} 🟩 Node/TS | 🟪 C#/.NET</span> {tx('o con las pestañas de cada bloque de código.', 'or with the tabs on each code block.')}
+              <Ic n="bulb" size={18} color="var(--yellow)" /> {tx('Puedes cambiarlo cuando quieras con el selector de la cabecera', 'You can change it anytime with the selector in the header')}{' '}
+              <span className="pill">{tx('Código:', 'Code:')} Node/TS | C#/.NET</span> {tx('o con las pestañas de cada bloque de código.', 'or with the tabs on each code block.')}
             </div>
           </motion.div>
         </motion.div>

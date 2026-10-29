@@ -4,6 +4,7 @@ import { MODULES } from '../content';
 import { useProgress } from '../store/progress';
 import { SimHost } from '../components/sims/SimHost';
 import { t, type Lab, type Module } from '../types';
+import { Ic, ModuleIcon } from '../components/ui/Icon';
 
 /** Laboratorios extra que no pertenecen a un solo módulo. */
 export const EXTRA_LABS: Lab[] = [
@@ -22,9 +23,9 @@ export function Labs() {
   const touched = (id: string) => Object.keys(tasks).filter((k) => k.startsWith(`${id}:`)).length;
   return (
     <div className="container mt-lg">
-      <h1>🧪 {tx('Laboratorios', 'Labs')}</h1>
+      <h1 className="h-icon"><Ic n="flask" size={36} /> {tx('Laboratorios', 'Labs')}</h1>
       <p className="muted">{tx('Simuladores donde practicas con las manos. Aquí no puedes romper nada de verdad: equivócate todo lo que quieras.', 'Simulators where you practice hands-on. You cannot really break anything here: make as many mistakes as you want.')}</p>
-      <h3 className="mt">⭐ {tx('Zonas libres', 'Free zones')}</h3>
+      <h3 className="mt h-icon"><Ic n="star" size={22} /> {tx('Zonas libres', 'Free zones')}</h3>
       <div className="grid grid-auto">
         {EXTRA_LABS.map((l) => (
           <Link key={l.id} to={`/labs/${l.id}`} className="card module-card" style={{ flexDirection: 'column', gap: 4 }}>
@@ -35,13 +36,13 @@ export function Labs() {
       </div>
       {MODULES.filter((m) => m.labs.length).map((m) => (
         <div key={m.id} className="mt-lg">
-          <h3>{m.emoji} {tr(m.title)}</h3>
+          <h3 className="h-icon"><ModuleIcon id={m.id} color={m.color} size={36} /> {tr(m.title)}</h3>
           <div className="grid grid-auto">
             {m.labs.map((l) => (
               <Link key={l.id} to={`/labs/${l.id}`} className="card module-card" style={{ ['--mc' as string]: m.color, flexDirection: 'column', gap: 4 }}>
                 <div className="row between" style={{ width: '100%' }}>
                   <span className="bold">{tr(l.title)}</span>
-                  {touched(l.id) > 0 && <span className="pill green">✓ {touched(l.id)}</span>}
+                  {touched(l.id) > 0 && <span className="pill green"><Ic n="check" size={14} weight="bold" /> {touched(l.id)}</span>}
                 </div>
                 <div className="small muted">{tr(l.desc)}</div>
               </Link>
@@ -62,14 +63,14 @@ export function LabDetail() {
   return (
     <div className="container mt">
       <div className="row small">
-        <Link to="/labs">← {tx('Laboratorios', 'Labs')}</Link>
+        <Link to="/labs" className="ic"><Ic n="left" size={16} /> {tx('Laboratorios', 'Labs')}</Link>
         {module && (
           <Link to={`/m/${module.id}`} className="faint">
-            · {module.emoji} {tr(module.title)}
+            · {tr(module.title)}
           </Link>
         )}
       </div>
-      <h1 className="mt">🧪 {tr(lab.title)}</h1>
+      <h1 className="mt h-icon"><Ic n="flask" size={36} /> {tr(lab.title)}</h1>
       <p className="muted">{tr(lab.desc)}</p>
       <SimHost id={lab.sim} props={lab.props} labId={lab.id} />
     </div>

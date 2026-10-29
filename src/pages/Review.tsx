@@ -5,6 +5,7 @@ import { CARD_INDEX, MODULES, mixedExercises } from '../content';
 import { dueCardIds, MAX_BOX, useProgress } from '../store/progress';
 import { CardDeck } from '../components/exercises/CardDeck';
 import { PracticeRunner } from '../components/exercises/PracticeRunner';
+import { Ic, IcTile } from '../components/ui/Icon';
 
 export function Review() {
   const { tr, tx } = useLang();
@@ -24,7 +25,7 @@ export function Review() {
   if (mode === 'cards') {
     return (
       <div className="container mt">
-        <button className="btn btn-ghost btn-sm mb" onClick={() => setMode(null)}>← {tx('Repaso', 'Review')}</button>
+        <button className="btn btn-ghost btn-sm mb" onClick={() => setMode(null)}><Ic n="left" size={16} /> {tx('Repaso', 'Review')}</button>
         {cards.length ? <CardDeck key={session} cards={cards} onDone={() => setMode(null)} /> : <div className="card center">{tx('No hay tarjetas.', 'No cards.')}</div>}
       </div>
     );
@@ -32,7 +33,7 @@ export function Review() {
   if (mode === 'quiz') {
     return (
       <div className="container narrow mt">
-        <button className="btn btn-ghost btn-sm mb" onClick={() => setMode(null)}>← {tx('Repaso', 'Review')}</button>
+        <button className="btn btn-ghost btn-sm mb" onClick={() => setMode(null)}><Ic n="left" size={16} /> {tx('Repaso', 'Review')}</button>
         <PracticeRunner key={session} exercises={quiz} title={tx('Repaso mezclado', 'Mixed review')} />
       </div>
     );
@@ -40,7 +41,7 @@ export function Review() {
 
   return (
     <div className="container mt-lg">
-      <h1>🧠 {tx('Repaso diario', 'Daily review')}</h1>
+      <h1 className="h-icon"><Ic n="brain" size={36} /> {tx('Repaso diario', 'Daily review')}</h1>
       <p className="muted" style={{ maxWidth: 720 }}>
         {tx(
           'Aquí vuelve todo lo que ya viste. Las tarjetas suben de caja cada vez que las sabes (1 → 5) y tardan más en volver; si fallas, vuelven a la caja 1. Así repasas justo lo que estás por olvidar.',
@@ -49,7 +50,7 @@ export function Review() {
       </p>
       <div className="grid grid-2 mt">
         <div className="card stack">
-          <div style={{ fontSize: '2.4rem' }}>🃏</div>
+          <IcTile n="cards" color="var(--primary-2)" />
           <h2 style={{ margin: 0 }}>{tx('Tarjetas para hoy', 'Cards for today')}</h2>
           <div style={{ fontSize: '2.6rem', fontWeight: 900, color: due.length ? 'var(--yellow)' : 'var(--green)' }}>{due.length}</div>
           {deckIds.length === 0 ? (
@@ -60,10 +61,10 @@ export function Review() {
               <button className="btn" onClick={() => { setAll(true); setSession((x) => x + 1); setMode('cards'); }}>{tx(`Repasar todo (${deckIds.length})`, `Review all (${deckIds.length})`)}</button>
             </div>
           )}
-          {!due.length && deckIds.length > 0 && <div className="small" style={{ color: 'var(--green)' }}>✅ {tx('¡Al día! Vuelve mañana o repasa todo si quieres más.', 'All caught up! Come back tomorrow or review everything for more.')}</div>}
+          {!due.length && deckIds.length > 0 && <div className="small" style={{ color: 'var(--green)' }}><Ic n="checkCircle" size={18} /> {tx('¡Al día! Vuelve mañana o repasa todo si quieres más.', 'All caught up! Come back tomorrow or review everything for more.')}</div>}
         </div>
         <div className="card stack">
-          <div style={{ fontSize: '2.4rem' }}>🎲</div>
+          <IcTile n="dice" color="var(--orange)" />
           <h2 style={{ margin: 0 }}>{tx('Quiz mezclado', 'Mixed quiz')}</h2>
           <p className="small muted">{tx('12 preguntas al azar de los módulos que ya estudiaste. Mezclar temas obliga al cerebro a "buscar" la respuesta, y eso la fija mejor.', '12 random questions from the modules you have studied. Mixing topics forces the brain to "search" for the answer, which makes it stick better.')}</p>
           <div className="small">{studied.length ? studied.map((id) => MODULES.find((m) => m.id === id)!.emoji).join(' ') : tx('(todavía ninguno: usaremos todos)', '(none yet: we will use all)')}</div>
@@ -73,7 +74,7 @@ export function Review() {
 
       {deckIds.length > 0 && (
         <div className="card mt">
-          <h3>📦 {tx('Tus tarjetas por caja', 'Your cards by box')}</h3>
+          <h3 className="h-icon"><Ic n="box" size={24} /> {tx('Tus tarjetas por caja', 'Your cards by box')}</h3>
           <div className="row" style={{ alignItems: 'flex-end', gap: 14, height: 150 }}>
             {boxes.map((n, i) => (
               <div key={i} className="grow center" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '100%' }}>

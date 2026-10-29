@@ -8,6 +8,7 @@ import { CodeBlock } from '../visuals/CodeBlock';
 import { highlight } from '../../lib/highlight';
 import { freshDb, runQuery, sameResult, type QueryResult } from '../../lib/sql';
 import { DataTable } from '../visuals/Visual';
+import { Ic } from '../ui/Icon';
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   // Barajado determinista por ejercicio (no cambia en cada render).
@@ -78,7 +79,7 @@ export function Exercise({ ex: full, onResult }: Props) {
       )}
       {locked && (
         <motion.div initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className={`feedback ${state === 'right' ? 'ok' : 'bad'}`}>
-          <div style={{ fontSize: '1.1rem', marginBottom: 4 }}>{state === 'right' ? `🎉 ${tx('¡Correcto!', 'Correct!')}` : `🔁 ${tx('Casi. Lo repetiremos más adelante.', 'Almost. We will repeat it later.')}`}</div>
+          <div style={{ fontSize: '1.1rem', marginBottom: 4 }}><span className="ic">{state === 'right' ? <><Ic n="celebrate" size={22} color="var(--green)" /> {tx('¡Correcto!', 'Correct!')}</> : <><Ic n="repeat" size={22} color="var(--red)" /> {tx('Casi. Lo repetiremos más adelante.', 'Almost. We will repeat it later.')}</>}</span></div>
           <div style={{ fontWeight: 600 }}>{tr(ex.explain)}</div>
           <button className={`btn ${state === 'right' ? 'btn-green' : 'btn-red'} mt`} onClick={() => onResult(state === 'right')}>
             {tx('Continuar', 'Continue')} ▶
@@ -151,7 +152,7 @@ function TrueFalse({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { typ
         const cls = locked ? (v === ex.answer ? 'correct' : v === sel ? 'wrong' : '') : v === sel ? 'selected' : '';
         return (
           <button key={String(v)} className={`option ${cls}`} disabled={locked} onClick={() => setSel(v)} style={{ justifyContent: 'center', fontSize: '1.1rem', padding: 18 }}>
-            {v ? `✅ ${tx('Verdadero', 'True')}` : `❌ ${tx('Falso', 'False')}`}
+            <span className="ic">{v ? <><Ic n="checkCircle" size={22} color="var(--green)" /> {tx('Verdadero', 'True')}</> : <><Ic n="xCircle" size={22} color="var(--red)" /> {tx('Falso', 'False')}</>}</span>
           </button>
         );
       })}
@@ -233,14 +234,14 @@ function Match({ ex, locked, onSelfResult }: BodyProps & { ex: Extract<Ex, { typ
       <div className="stack" style={{ gap: 8 }}>
         {ex.pairs.map(([l], i) => (
           <button key={i} className={`option ${left === i ? 'selected' : ''}`} disabled={matched.includes(i) || locked} onClick={() => setLeft(i)} style={matched.includes(i) ? { borderColor: colorOf(i), opacity: 0.75 } : undefined}>
-            {matched.includes(i) && '✓ '}{tr(l)}
+            {matched.includes(i) && <Ic n="check" size={16} color="var(--green)" weight="bold" />}{tr(l)}
           </button>
         ))}
       </div>
       <div className="stack" style={{ gap: 8 }}>
         {right.map((i) => (
           <button key={i} className={`option ${bad === i ? 'wrong shake' : ''}`} disabled={matched.includes(i) || locked} onClick={() => pickRight(i)} style={matched.includes(i) ? { borderColor: colorOf(i), opacity: 0.75 } : undefined}>
-            {matched.includes(i) && '✓ '}{tr(ex.pairs[i][1])}
+            {matched.includes(i) && <Ic n="check" size={16} color="var(--green)" weight="bold" />}{tr(ex.pairs[i][1])}
           </button>
         ))}
       </div>
@@ -352,7 +353,7 @@ function SqlEx({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: '
       <textarea className="textarea" value={sql} onChange={(e) => setSql(e.target.value)} disabled={locked} placeholder="SELECT …" spellCheck={false} style={{ minHeight: 90 }} />
       <div className="row">
         <button className="btn btn-sm" onClick={tryRun} disabled={!sql.trim()}>▶ {tx('Probar (ver resultado)', 'Try (see result)')}</button>
-        <button className="btn btn-ghost btn-sm" onClick={() => setShowHint((h) => !h)}>💡 {tx('Pista', 'Hint')}</button>
+        <button className="btn btn-ghost btn-sm" onClick={() => setShowHint((h) => !h)}><Ic n="bulb" size={18} /> {tx('Pista', 'Hint')}</button>
         <span className="tiny faint">{tx('Tablas: users, orders, products, accounts', 'Tables: users, orders, products, accounts')}</span>
       </div>
       {showHint && <div className="tip small">{tr(ex.hint)}</div>}
@@ -410,7 +411,7 @@ function CodeEx({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: 
   return (
     <div className="stack">
       <div className="tiny faint">
-        🟦 {tx('Escribe en TypeScript: se ejecuta de verdad en tu navegador.', 'Write in TypeScript: it really runs in your browser.')}
+        <Ic n="file" size={16} color="#3178c6" /> {tx('Escribe en TypeScript: se ejecuta de verdad en tu navegador.', 'Write in TypeScript: it really runs in your browser.')}
         {isDotnet && ex.csharp && ` ${tx('Al terminar verás la versión en C#.', 'When done you will see the C# version.')}`}
       </div>
       <textarea
@@ -432,14 +433,14 @@ function CodeEx({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: 
       />
       <div className="row">
         <button className="btn btn-sm" onClick={async () => setRes(await runCodeTests(code, ex.fn, ex.tests))}>▶ {tx('Correr pruebas', 'Run tests')}</button>
-        <button className="btn btn-ghost btn-sm" onClick={() => setCode(ex.starter)}>↺ {tx('Reiniciar', 'Reset')}</button>
+        <button className="btn btn-ghost btn-sm" onClick={() => setCode(ex.starter)}><Ic n="reset" size={18} /> {tx('Reiniciar', 'Reset')}</button>
       </div>
       {typeof res === 'string' && <div className="feedback bad small mono">{res}</div>}
       {Array.isArray(res) && (
         <div className="stack" style={{ gap: 4 }}>
           {res.map((r, i) => (
             <div key={i} className="mono small" style={{ color: r.ok ? 'var(--green)' : 'var(--red)' }}>
-              {r.ok ? '✅' : '❌'} {tr(r.label)} {!r.ok && <span className="faint">({tx('recibido', 'got')}: {r.got})</span>}
+              <Ic n={r.ok ? 'checkCircle' : 'xCircle'} size={18} /> {tr(r.label)} {!r.ok && <span className="faint">({tx('recibido', 'got')}: {r.got})</span>}
             </div>
           ))}
         </div>

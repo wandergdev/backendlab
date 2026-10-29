@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import type { SimId, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { completeTask, useProgress } from '../../store/progress';
+import { Ic } from '../ui/Icon';
 
 export type SimProps = { labId?: string } & Record<string, unknown>;
 
@@ -91,7 +92,7 @@ export function Tasks({ labId, items }: { labId?: string; items: TaskDef[] }) {
   return (
     <div className="panel">
       <div className="row between" style={{ marginBottom: 6 }}>
-        <div className="bold">🎯 {tx('Objetivos', 'Goals')}</div>
+        <div className="bold ic"><Ic n="target" size={20} color="var(--red)" /> {tx('Objetivos', 'Goals')}</div>
         <span className={`pill ${count === items.length ? 'green' : ''}`}>
           {count}/{items.length}
         </span>
@@ -101,7 +102,7 @@ export function Tasks({ labId, items }: { labId?: string; items: TaskDef[] }) {
           const done = it.done || (labId ? !!saved[`${labId}:${it.key}`] : false);
           return (
             <div key={it.key} className={`task ${done ? 'done' : ''}`}>
-              <span className="check">{done ? '✓' : ''}</span>
+              <span className="check">{done && <Ic n="check" size={14} weight="bold" />}</span>
               <span className="small">{tr(it.label)}</span>
             </div>
           );

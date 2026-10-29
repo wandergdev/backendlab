@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import type { SeqActor, SeqMessage } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { Glyph } from '../ui/Icon';
+import { Ic } from '../ui/Icon';
 
 /**
  * Diagrama de secuencia animado: cada mensaje "viaja" de un actor a otro como un paquete.
@@ -65,7 +66,7 @@ export function Sequence({ actors, messages, autoplay = false }: { actors: SeqAc
                     border: `2px solid ${color}`, borderRadius: 10, padding: '4px 10px', maxWidth: '46%', textAlign: 'center', lineHeight: 1.25,
                   }}
                 >
-                  ⚙️ {tr(m.label)}
+                  <Ic n="gear" size={16} /> {tr(m.label)}
                 </div>
               ) : (
                 <>
@@ -103,13 +104,13 @@ export function Sequence({ actors, messages, autoplay = false }: { actors: SeqAc
       </div>
       <div className="row center mt">
         <button className="btn btn-primary btn-sm" onClick={playing ? () => setPlaying(false) : play}>
-          {playing ? `⏸ ${tx('Pausa', 'Pause')}` : step >= messages.length ? `↺ ${tx('Repetir', 'Replay')}` : `▶ ${tx('Reproducir', 'Play')}`}
+          {playing ? <><Ic n="pause" size={18} /> {tx('Pausa', 'Pause')}</> : step >= messages.length ? <><Ic n="reset" size={18} /> {tx('Repetir', 'Replay')}</> : <><Ic n="play" size={18} weight="fill" /> {tx('Reproducir', 'Play')}</>}
         </button>
         <button className="btn btn-sm" disabled={step >= messages.length} onClick={() => { setPlaying(false); setStep((s) => s + 1); }}>
-          ⏭ {tx('Paso', 'Step')}
+          <Ic n="next" size={18} /> {tx('Paso', 'Step')}
         </button>
         <button className="btn btn-ghost btn-sm" onClick={() => { setPlaying(false); setStep(0); }}>
-          ⏮ {tx('Inicio', 'Start')}
+          <Ic n="prev" size={18} /> {tx('Inicio', 'Start')}
         </button>
         <span className="small faint">{Math.min(step, messages.length)}/{messages.length}</span>
       </div>

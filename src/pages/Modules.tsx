@@ -5,10 +5,14 @@ import { useLang } from '../i18n/lang';
 import { MODULES } from '../content';
 import { useProgress } from '../store/progress';
 import { moduleStatus } from '../lib/status';
-import { ModuleIcon } from '../components/ui/Icon';
+import { ModuleIcon, Ic } from '../components/ui/Icon';
 
 export function Stars({ n }: { n: number }) {
-  return <span className="stars">{[0, 1, 2].map((i) => (i < n ? '⭐' : '☆')).join('')}</span>;
+  return (
+    <span className="stars" role="img" aria-label={`${n}/3`}>
+      {[0, 1, 2].map((i) => <Ic key={i} n="star" size={16} weight={i < n ? 'fill' : 'regular'} color={i < n ? 'var(--yellow)' : 'var(--faint)'} />)}
+    </span>
+  );
 }
 
 export function ModuleCard({ m }: { m: Module }) {
@@ -49,11 +53,11 @@ export function Modules() {
   return (
     <div className="container mt-lg">
       <h1>{tx('Los módulos', 'The modules')}</h1>
-      <p className="muted">{tx('⭐ lección · ⭐ práctica ≥ 80% · ⭐ laboratorios.', '⭐ lesson · ⭐ practice ≥ 80% · ⭐ labs.')}</p>
-      <h2 className="mt-lg">🧱 {tx(`Fundamentos (${core.length})`, `Fundamentals (${core.length})`)}</h2>
+      <p className="muted ic"><Ic n="star" size={16} weight="fill" color="var(--yellow)" /> {tx('lección · práctica ≥ 80% · laboratorios', 'lesson · practice ≥ 80% · labs')}</p>
+      <h2 className="mt-lg h-icon"><Ic n="stack" size={28} /> {tx(`Fundamentos (${core.length})`, `Fundamentals (${core.length})`)}</h2>
       <p className="muted small">{tx('Los conceptos que sirven en cualquier lenguaje. Síguelos en orden: cada uno usa piezas del anterior.', 'Concepts that work in any language. Follow them in order: each one uses pieces from the previous.')}</p>
       {grid(core)}
-      <h2 className="mt-lg">🟩🟪 {tx(`Tu stack: Node/TS y C#/.NET (${stack.length})`, `Your stack: Node/TS and C#/.NET (${stack.length})`)}</h2>
+      <h2 className="mt-lg h-icon"><Ic n="code" size={28} /> {tx(`Tu stack: Node/TS y C#/.NET (${stack.length})`, `Your stack: Node/TS and C#/.NET (${stack.length})`)}</h2>
       <p className="muted small">{tx('Las herramientas concretas para construir de verdad. Puedes intercalarlos con los fundamentos (por ejemplo, TypeScript y C# junto al módulo 2, EF Core después del 6).', 'The concrete tools to build for real. You can interleave them with the fundamentals (e.g. TypeScript and C# alongside module 2, EF Core after module 6).')}</p>
       {grid(stack)}
     </div>

@@ -3,6 +3,7 @@ import { highlight } from '../../lib/highlight';
 import type { CodeLang, CodeSnippet } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { STACKS, useStack, type Stack } from '../../i18n/stack';
+import { Ic } from '../ui/Icon';
 
 const LANG_LABEL: Partial<Record<CodeLang, string>> = { ts: 'TypeScript', js: 'JavaScript', csharp: 'C#', sql: 'SQL', bash: 'Terminal', docker: 'Dockerfile', json: 'JSON', http: 'HTTP', yaml: 'YAML', graphql: 'GraphQL' };
 
@@ -34,7 +35,7 @@ export function CodeBlock({ snippet, copy = true }: { snippet: CodeSnippet; copy
                 borderColor: stack === st ? STACKS[st].color : 'var(--border)',
               }}
             >
-              {STACKS[st].emoji} {STACKS[st].short}
+              <Ic n={st === 'node' ? 'file' : 'csharp'} size={16} /> {STACKS[st].short}
             </button>
           ))}
           <span className="tiny faint hide-mobile" style={{ marginLeft: 6 }}>← {tx('cambia todos los ejemplos', 'switches all examples')}</span>
@@ -48,7 +49,7 @@ export function CodeBlock({ snippet, copy = true }: { snippet: CodeSnippet; copy
           {LANG_LABEL[shown.lang] && <span className="tiny mono" style={{ color: '#6f7aa8' }}>{LANG_LABEL[shown.lang]}</span>}
           {copy && (
             <button className="btn btn-ghost btn-sm" onClick={doCopy} style={{ color: '#a6abd6' }}>
-              {copied ? tx('¡Copiado!', 'Copied!') : tx('Copiar', 'Copy')}
+              <Ic n={copied ? 'check' : 'copy'} size={16} /> {copied ? tx('¡Copiado!', 'Copied!') : tx('Copiar', 'Copy')}
             </button>
           )}
         </div>
