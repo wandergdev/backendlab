@@ -63,7 +63,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a { color: var(--primary-2); text-decoration: none; }
-:root[data-theme='light'] a { color: var(--primary); }
+:root[data-theme='light'] a:not(.btn) { color: var(--primary); }
 button { font-family: inherit; font-size: inherit; color: inherit; }
 input, textarea, select { font-family: inherit; font-size: inherit; color: var(--text); }
 code, pre, .mono { font-family: var(--mono); }
@@ -363,3 +363,7 @@ span.ic, a.ic, label.ic { display: inline-flex; }
   .header .icon-btn { width: 40px; height: 40px; min-height: 40px; }
   .header .btn-sm { padding: 6px 8px; }
 }
+a.btn { color: var(--text); }
+a.btn-primary, a.btn-red { color: #fff; }
+a.btn-green { color: #052e16; }
+:root[data-theme='light'] a.btn-green { color: #fff; }
