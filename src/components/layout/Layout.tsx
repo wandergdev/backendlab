@@ -66,8 +66,8 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="header-stats">
             <Link to="/progress" className="stat-chip" style={{ color: 'var(--text)' }} title={`${tx('Racha', 'Streak')}: ${streak.count} · ${lv.into}/${lv.need} XP`} aria-label={tx(`Racha de ${streak.count} días, nivel ${lv.lvl}`, `${streak.count}-day streak, level ${lv.lvl}`)}>
               <FireIcon size={18} weight="duotone" color="var(--orange)" aria-hidden /> {streak.count}
-              <span className="hide-mobile row" style={{ gap: 4 }}>
-                <span className="faint">·</span> <StarIcon size={18} weight="duotone" color="var(--yellow)" aria-hidden /> {tx('Nv', 'Lv')} {lv.lvl}
+              <span className="hide-mobile row" style={{ gap: 4, marginLeft: 6 }}>
+                <StarIcon size={18} weight="duotone" color="var(--yellow)" aria-hidden /> {tx('Nv', 'Lv')} {lv.lvl}
               </span>
             </Link>
             <StackSwitch />
@@ -102,15 +102,15 @@ export function Layout({ children }: { children: ReactNode }) {
       <footer className="footer">
         <div className="container row between">
           <span>
-            BackendLab · {tx('Basado en', 'Based on')}{' '}
+            {tx('Basado en', 'Based on')}{' '}
             <a href="https://dev.to/edriso/the-backend-developer-fundamentals-guide-3j55" target="_blank" rel="noreferrer">
               The Backend Developer Fundamentals Guide
-            </a>{' '}
-            · {tx('Iconos', 'Icons')}: <a href="https://phosphoricons.com" target="_blank" rel="noreferrer">Phosphor</a>
+            </a>
+            {tx('. Iconos de ', '. Icons by ')}<a href="https://phosphoricons.com" target="_blank" rel="noreferrer">Phosphor</a>.
           </span>
           <span>
             {tx('Tu progreso se guarda en este navegador.', 'Your progress is stored in this browser.')}{' '}
-            <Link to="/progress">{tx('Llevarlo a otro dispositivo →', 'Take it to another device →')}</Link>
+            <Link to="/progress">{tx('Llévalo a otro dispositivo', 'Take it to another device')}</Link>
           </span>
         </div>
       </footer>

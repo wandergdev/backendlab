@@ -286,7 +286,7 @@ function Fill({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: 'f
           </button>
         ))}
       </div>
-      {locked && <div className="small mono">{tx('Respuesta:', 'Answer:')} {ex.blanks.join('  ·  ')}</div>}
+      {locked && <div className="small mono">{tx('Respuesta:', 'Answer:')} {ex.blanks.join(', ')}</div>}
     </div>
   );
 }

@@ -51,10 +51,11 @@ export function Glyph({ emoji, size = 24, color }: { emoji?: string; size?: numb
 }
 
 /** Recuadro de color con el icono de un módulo. */
-export function ModuleIcon({ id, color, size = 56 }: { id: string; color: string; size?: number }) {
+/** Recuadro con el icono de un módulo. Todos usan el mismo acento: el color no compite con el contenido. */
+export function ModuleIcon({ id, size = 56 }: { id: string; color?: string; size?: number }) {
   const I = MODULE_ICON[id] ?? BookOpenIcon;
   return (
-    <span className="icon-tile" style={{ width: size, height: size, color, ['--tile' as string]: color }} aria-hidden>
+    <span className="icon-tile" style={{ width: size, height: size, color: 'var(--primary-2)', ['--tile' as string]: 'var(--primary)' }} aria-hidden>
       <I size={Math.round(size * 0.56)} weight="duotone" />
     </span>
   );

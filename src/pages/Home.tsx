@@ -1,102 +1,133 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { useLang } from '../i18n/lang';
 import { MODULES } from '../content';
 import { dueCardIds, level, useProgress } from '../store/progress';
 import { moduleStatus } from '../lib/status';
 import { Blocks } from '../components/visuals/Blocks';
-import { ModuleCard } from './Modules';
-import { Ic, IcTile, type IcName } from '../components/ui/Icon';
+import { Ic, ModuleIcon, type IcName } from '../components/ui/Icon';
+import type { BlockPiece, Txt } from '../types';
+import { t } from '../types';
+
+// La "cartilla": la misma idea de leer (L + A = LA) aplicada a backend. Es el único movimiento automático de la portada.
+const PRIMER: { pieces: BlockPiece[]; result: Txt; resultEmoji?: string; caption: Txt }[] = [
+  { pieces: [{ label: 'L', color: '#f0b34a' }, { label: 'A', color: '#7fb2ff' }], result: 'LA', caption: t('Así aprendiste a leer: dos letras, una sílaba.', 'This is how you learned to read: two letters, one syllable.') },
+  { pieces: [{ label: 'GET', emoji: '📥', color: '#6bcb8b' }, { label: '/users/42', emoji: '🔗', color: '#7fb2ff' }], result: t('Dame el usuario 42', 'Give me user 42'), resultEmoji: '👤', caption: t('Así se lee un request: un verbo y una dirección.', 'This is how you read a request: a verb and an address.') },
+  { pieces: [{ label: 'Request', emoji: '📨', color: '#7fb2ff' }, { label: t('Servidor', 'Server'), emoji: '🖥️', color: '#f0b34a' }, { label: 'Response', emoji: '📬', color: '#6bcb8b' }], result: t('Toda la web', 'The whole web'), resultEmoji: '🌐', caption: t('Y con tres piezas ya entiendes cómo funciona la web.', 'And with three pieces you understand how the web works.') },
+];
+
+function Primer() {
+  const { tr, tx } = useLang();
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(() => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  useEffect(() => {
+    if (paused) return;
+    const id = window.setTimeout(() => setI((x) => (x + 1) % PRIMER.length), 5200);
+    return () => clearTimeout(id);
+  }, [i, paused]);
+  const p = PRIMER[i];
+  return (
+    <figure className="primer" style={{ margin: 0 }} onMouseEnter={() => setPaused(true)} onFocus={() => setPaused(true)}>
+      <Blocks key={i} pieces={p.pieces} result={p.result} resultEmoji={p.resultEmoji} replay={false} />
+      <figcaption className="primer-caption" aria-live="polite">{tr(p.caption)}</figcaption>
+      <div className="primer-dots">
+        {PRIMER.map((_, k) => (
+          <button key={k} aria-label={tx(`Ejemplo ${k + 1}`, `Example ${k + 1}`)} aria-current={k === i} onClick={() => { setI(k); setPaused(true); }}>
+            <span />
+          </button>
+        ))}
+      </div>
+    </figure>
+  );
+}
 
 export function Home() {
-  const { tx } = useLang();
+  const { tr, tx } = useLang();
   const s = useProgress((x) => x);
   const due = dueCardIds(s).length;
   const lv = level(s.xp);
   const next = MODULES.find((m) => !moduleStatus(m, s).lesson) ?? MODULES[0];
   const nextStatus = moduleStatus(next, s);
   const totalStars = MODULES.reduce((a, m) => a + moduleStatus(m, s).stars, 0);
+  const startedAny = s.xp > 0;
 
-  const method = [
-    { icon: 'eye' as IcName, color: 'var(--blue)', title: tx('1. Ver', '1. See'), desc: tx('Lecciones animadas: cada idea entra por los ojos, paso a paso, con ejemplos del mundo real y de código.', 'Animated lessons: every idea goes in through your eyes, step by step, with real-world and code examples.') },
-    { icon: 'repeat' as IcName, color: 'var(--primary-2)', title: tx('2. Repetir', '2. Repeat'), desc: tx('Práctica donde lo que fallas VUELVE a aparecer hasta que lo dominas.', 'Practice where whatever you miss COMES BACK until you master it.') },
-    { icon: 'flask' as IcName, color: 'var(--green)', title: tx('3. Hacer', '3. Do'), desc: tx('Laboratorios: terminal Linux, Git, SQL real, una API, ataques de seguridad… todo dentro de la web.', 'Labs: Linux terminal, Git, real SQL, an API, security attacks… all inside the website.') },
-    { icon: 'brain' as IcName, color: 'var(--pink)', title: tx('4. Recordar', '4. Remember'), desc: tx('Tarjetas con repetición espaciada: vuelven justo cuando estás por olvidarlas.', 'Flashcards with spaced repetition: they come back right when you are about to forget.') },
+  const method: { icon: IcName; title: string; desc: string }[] = [
+    { icon: 'eye', title: tx('Ver', 'See'), desc: tx('Cada idea en una pantalla, animada, con un ejemplo de la vida real y otro de código.', 'One idea per screen, animated, with a real-life example and a code example.') },
+    { icon: 'repeat', title: tx('Repetir', 'Repeat'), desc: tx('Lo que fallas vuelve a salir hasta que lo aciertas.', 'Whatever you miss comes back until you get it right.') },
+    { icon: 'flask', title: tx('Hacer', 'Do'), desc: tx('Terminal, Git, SQL real y una API de práctica, sin instalar nada.', 'Terminal, Git, real SQL and a practice API, with nothing to install.') },
+    { icon: 'brain', title: tx('Recordar', 'Remember'), desc: tx('Tarjetas que vuelven justo cuando las estás olvidando.', 'Cards that come back just as you start forgetting them.') },
   ];
 
   return (
     <>
-      <section className="hero-glow">
-        <div className="container" style={{ padding: '48px 16px 32px' }}>
-          <div className="grid grid-2" style={{ alignItems: 'center', gap: 32 }}>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <span className="pill purple"><Ic n="sparkle" size={16} /> {tx(`${MODULES.length} módulos · Node/TS y C#/.NET · ES / EN`, `${MODULES.length} modules · Node/TS and C#/.NET · ES / EN`)}</span>
-              <h1 style={{ marginTop: 14 }}>{tx('Aprende backend viéndolo, no solo leyéndolo.', 'Learn backend by seeing it, not just reading it.')}</h1>
-              <p className="muted" style={{ fontSize: '1.1rem' }}>
+      <section className="home-hero">
+        <div className="container">
+          <div className="grid grid-2" style={{ alignItems: 'center', gap: 40 }}>
+            <div>
+              <h1>{tx('Aprende backend como aprendiste a leer.', 'Learn backend the way you learned to read.')}</h1>
+              <p className="lead">
                 {tx(
-                  'Como cuando aprendimos a leer: primero las letras, luego las sílabas, luego las palabras. Aquí cada concepto grande se arma con piezas pequeñas que ya viste, y lo repites hasta que se queda.',
-                  'Like when we learned to read: first letters, then syllables, then words. Here every big concept is built from small pieces you have already seen, and you repeat it until it sticks.',
+                  'Primero las letras, luego las palabras. Cada concepto se arma con piezas que ya viste, y lo repites hasta que se queda.',
+                  'Letters first, then words. Every concept is built from pieces you have already seen, and you repeat it until it sticks.',
                 )}
               </p>
               <div className="row mt">
                 <Link className="btn btn-primary btn-lg" to={nextStatus.started ? `/m/${next.id}/lesson` : `/m/${next.id}`}>
-                  {nextStatus.started ? tx('Continuar', 'Continue') : tx('Empezar ahora', 'Start now')} <Ic n="right" size={18} weight="bold" />
+                  {nextStatus.started ? tx('Continuar la lección', 'Continue the lesson') : startedAny ? tx(`Empezar: ${tr(next.title)}`, `Start: ${tr(next.title)}`) : tx('Empezar la lección 1', 'Start lesson 1')}
                 </Link>
-                {due > 0 && (
+                {due > 0 ? (
                   <Link className="btn btn-lg" to="/review">
                     <Ic n="cards" /> {tx(`Repasar ${due} tarjetas`, `Review ${due} cards`)}
                   </Link>
+                ) : (
+                  <Link className="btn btn-ghost btn-lg" to="/modules">{tx('Ver el temario', 'See the syllabus')}</Link>
                 )}
               </div>
-            </motion.div>
-            <motion.div className="card" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 }}>
-              <div className="tiny bold faint center">{tx('ASÍ APRENDIMOS A LEER…', 'THIS IS HOW WE LEARNED TO READ…')}</div>
-              <Blocks pieces={[{ label: 'L', color: '#ff9f43' }, { label: 'A', color: '#4cc9f0' }]} result="LA" compact />
-              <div className="tiny bold faint center mt">{tx('…Y ASÍ APRENDERÁS BACKEND', '…AND THIS IS HOW YOU WILL LEARN BACKEND')}</div>
-              <Blocks pieces={[{ label: 'GET', emoji: '📥' }, { label: '/users/42', emoji: '🔗' }]} result={tx('"Dame el usuario 42"', '"Give me user 42"')} resultEmoji="👤" compact />
-              <Blocks pieces={[{ label: 'Request', emoji: '📨' }, { label: tx('Servidor', 'Server'), emoji: '🖥️' }, { label: 'Response', emoji: '📬' }]} result={tx('Toda la web', 'The whole web')} resultEmoji="🌐" compact />
-            </motion.div>
+            </div>
+            <Primer />
           </div>
         </div>
       </section>
 
-      <section className="container mt">
-        <div className="grid grid-3">
-          <div className="card tight center"><IcTile n="fire" color="var(--orange)" size={48} /><div className="bold" style={{ fontSize: '1.5rem' }}>{s.streak.count}</div><div className="small muted">{tx('días de racha', 'day streak')}</div></div>
-          <div className="card tight center"><IcTile n="star" color="var(--yellow)" size={48} /><div className="bold" style={{ fontSize: '1.5rem' }}>{tx('Nivel', 'Level')} {lv.lvl}</div><div className="progress mt"><div style={{ width: `${(lv.into / lv.need) * 100}%` }} /></div><div className="tiny muted">{s.xp} XP</div></div>
-          <div className="card tight center"><IcTile n="trophy" color="var(--green)" size={48} /><div className="bold" style={{ fontSize: '1.5rem' }}>{totalStars}/{MODULES.length * 3}</div><div className="small muted">{tx('estrellas de dominio', 'mastery stars')}</div></div>
+      <section className="container mt-lg">
+        <div className="facts" role="list">
+          <div role="listitem"><Ic n="fire" size={24} color="var(--orange)" /><span><strong>{s.streak.count}</strong><small>{tx(s.streak.count === 1 ? 'día seguido' : 'días seguidos', s.streak.count === 1 ? 'day in a row' : 'days in a row')}</small></span></div>
+          <div role="listitem"><Ic n="star" size={24} color="var(--primary-2)" /><span><strong>{tx('Nivel', 'Level')} {lv.lvl}</strong><small>{tx(`${lv.need - lv.into} XP para el siguiente`, `${lv.need - lv.into} XP to the next one`)}</small></span></div>
+          <div role="listitem"><Ic n="trophy" size={24} color="var(--green)" /><span><strong>{totalStars} / {MODULES.length * 3}</strong><small>{tx('estrellas de dominio', 'mastery stars')}</small></span></div>
+          <div role="listitem"><Ic n="cards" size={24} color="var(--blue)" /><span><strong>{due}</strong><small>{tx('tarjetas para hoy', 'cards for today')}</small></span></div>
         </div>
       </section>
 
       <section className="container mt-lg">
-        <h2>{tx('El método: 4 pasos que se repiten en cada módulo', 'The method: 4 steps repeated in every module')}</h2>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-          {method.map((m, i) => (
-            <motion.div key={i} className="card" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <IcTile n={m.icon} color={m.color} size={56} />
-              <h3>{m.title}</h3>
-              <p className="small muted" style={{ margin: 0 }}>{m.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        <div className="tip mt small">
-          <Ic n="bulb" size={20} color="var(--yellow)" /> {tx(
-            '¿Sientes que si no lo has visto, no lo sabes? Es normal. Por eso aquí todo se VE primero y luego se repite muchas veces de formas distintas (tarjeta, quiz, laboratorio). Repetir no es perder el tiempo: es como el cerebro guarda las cosas.',
-            'Feel like if you have not seen it, you do not know it? That is normal. That is why here everything is SEEN first and then repeated many times in different ways (card, quiz, lab). Repeating is not wasting time: it is how the brain stores things.',
-          )}
-        </div>
+        <h2>{tx('Continúa donde lo dejaste', 'Pick up where you left off')}</h2>
+        <Link to={`/m/${next.id}`} className="next-up">
+          <ModuleIcon id={next.id} color={next.color} size={52} />
+          <span className="grow" style={{ minWidth: 0 }}>
+            <span className="module-num">{tx('Módulo', 'Module')} {next.num}</span>
+            <span className="bold" style={{ display: 'block', fontSize: '1.1rem' }}>{tr(next.title)}</span>
+            <span className="small muted">{tr(next.tagline)}</span>
+          </span>
+          <span className="hide-mobile small muted" style={{ fontVariantNumeric: 'tabular-nums' }}>{nextStatus.pct}%</span>
+          <Ic n="right" size={22} />
+        </Link>
+        <p className="small mt"><Link to="/modules">{tx(`Ver los ${MODULES.length} módulos`, `See all ${MODULES.length} modules`)}</Link></p>
       </section>
 
       <section className="container mt-lg">
-        <div className="row between">
-          <h2 style={{ margin: 0 }}>{tx('Tu camino', 'Your path')}</h2>
-          <Link to="/modules">{tx('Ver todos →', 'See all →')}</Link>
-        </div>
-        <div className="grid grid-auto mt">
-          {MODULES.slice(0, 6).map((m) => (
-            <ModuleCard key={m.id} m={m} />
+        <h2>{tx('Cómo se estudia aquí', 'How you study here')}</h2>
+        <p className="muted">{tx('Los mismos cuatro pasos en cada módulo. Repetir no es perder el tiempo: es como el cerebro guarda las cosas.', 'The same four steps in every module. Repeating is not wasting time: it is how the brain stores things.')}</p>
+        <ol className="steps mt">
+          {method.map((m, k) => (
+            <li key={m.title}>
+              <div className="step-head">
+                <span className="step-n">{k + 1}</span>
+                <span className="step-line" />
+              </div>
+              <h3><Ic n={m.icon} size={20} color="var(--primary-2)" /> {m.title}</h3>
+              <p>{m.desc}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
     </>
   );

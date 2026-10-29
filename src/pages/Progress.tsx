@@ -14,8 +14,8 @@ function Summary({ p, title, color }: { p: PortableProgress; title: string; colo
   return (
     <div className="panel" style={{ borderColor: color, borderWidth: 2 }}>
       <div className="bold mb">{title}</div>
-      <div className="small ic"><Ic n="star" size={16} /> {s.xp} XP · <Ic n="fire" size={16} /> {s.streak} {tx('días', 'days')}</div>
-      <div className="small ic"><Ic n="eye" size={16} /> {s.lessons} {tx('lecciones', 'lessons')} · <Ic n="brain" size={16} /> {s.cards} {tx('tarjetas', 'cards')} · <Ic n="target" size={16} /> {s.tasks} {tx('objetivos', 'goals')}</div>
+      <div className="small ic"><Ic n="star" size={16} /> {s.xp} XP <span style={{ width: 8 }} /> <Ic n="fire" size={16} /> {s.streak} {tx('días', 'days')}</div>
+      <div className="small ic"><Ic n="eye" size={16} /> {s.lessons} {tx('lecciones', 'lessons')} <span style={{ width: 8 }} /> <Ic n="brain" size={16} /> {s.cards} {tx('tarjetas', 'cards')} <span style={{ width: 8 }} /> <Ic n="target" size={16} /> {s.tasks} {tx('objetivos', 'goals')}</div>
     </div>
   );
 }

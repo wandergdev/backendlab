@@ -42,11 +42,11 @@ export function ModulePage({ tab = 'overview' }: { tab?: Tab }) {
       <div className="row small">
         <Link to="/modules" className="ic"><Ic n="left" size={16} /> {tx('Módulos', 'Modules')}</Link>
       </div>
-      <div className="card mt" style={{ borderColor: m.color, borderWidth: 2 }}>
+      <div className="card mt">
         <div className="row" style={{ alignItems: 'flex-start', gap: 18 }}>
           <ModuleIcon id={m.id} color={m.color} size={76} />
           <div className="grow" style={{ minWidth: 220 }}>
-            <div className="module-num">{tx('Módulo', 'Module')} {m.num} / {MODULES.length}</div>
+            <div className="module-num">{tx(`Módulo ${m.num} de ${MODULES.length}`, `Module ${m.num} of ${MODULES.length}`)}</div>
             <h1 style={{ margin: '4px 0' }}>{tr(m.title)}</h1>
             <div className="muted">{tr(m.tagline)}</div>
             <div className="row mt">
@@ -55,7 +55,6 @@ export function ModulePage({ tab = 'overview' }: { tab?: Tab }) {
             </div>
           </div>
         </div>
-        <div className="tiny bold faint center mt">{tx('LA FÓRMULA DE ESTE MÓDULO', 'THIS MODULE’S FORMULA')}</div>
         <Blocks pieces={m.formula.pieces} result={m.formula.result} />
       </div>
 

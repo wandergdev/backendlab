@@ -66,7 +66,7 @@ export function LabDetail() {
         <Link to="/labs" className="ic"><Ic n="left" size={16} /> {tx('Laboratorios', 'Labs')}</Link>
         {module && (
           <Link to={`/m/${module.id}`} className="faint">
-            · {tr(module.title)}
+            {tx('del módulo', 'from module')} {tr(module.title)}
           </Link>
         )}
       </div>

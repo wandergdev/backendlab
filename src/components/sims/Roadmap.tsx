@@ -81,7 +81,7 @@ export function RoadmapSim({ labId = 'road-check' }: SimProps) {
               <label key={it.id} className={`task ${done[it.id] ? 'done' : ''}`} style={{ cursor: 'pointer' }}>
                 <input type="checkbox" checked={!!done[it.id]} onChange={() => { toggleRoadmap(it.id); completeTask(`${labId}:check`, 5); }} style={{ marginTop: 5 }} />
                 <span className="small grow">{tr(it.text)}</span>
-                {it.module && <Link className="tiny" to={`/m/${it.module}`}>{tx('ir al módulo →', 'go to module →')}</Link>}
+                {it.module && <Link className="tiny" to={`/m/${it.module}`}>{tx('Ir al módulo', 'Go to module')}</Link>}
               </label>
             ))}
           </motion.div>

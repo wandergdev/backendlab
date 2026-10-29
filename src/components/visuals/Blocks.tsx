@@ -4,13 +4,14 @@ import type { BlockPiece, Txt } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { Glyph, Ic } from '../ui/Icon';
 
-const PALETTE = ['#7c6cff', '#4cc9f0', '#ff9f43', '#f78fb3', '#ffd166', '#00d29a'];
+// Pocos tonos, armónicos con el ámbar de la marca: distinguen las piezas sin hacer un arcoíris.
+const PALETTE = ['#7fb2ff', '#f0b34a', '#6bcb8b', '#e89aa8', '#b3a4f0', '#5fc6c9'];
 
 /**
  * La fórmula visual "L + A = LA": cada pieza aparece una por una y al final se combinan en el resultado.
  * Así el cerebro ve que una idea grande está hecha de ideas pequeñas que ya conoce.
  */
-export function Blocks({ pieces, result, resultEmoji, compact = false }: { pieces: BlockPiece[]; result: Txt; resultEmoji?: string; compact?: boolean }) {
+export function Blocks({ pieces, result, resultEmoji, compact = false, replay = true }: { pieces: BlockPiece[]; result: Txt; resultEmoji?: string; compact?: boolean; replay?: boolean }) {
   const { tr, tx } = useLang();
   const [run, setRun] = useState(0);
   const step = compact ? 0.15 : 0.55;
@@ -50,7 +51,7 @@ export function Blocks({ pieces, result, resultEmoji, compact = false }: { piece
           <span>{tr(result)}</span>
         </motion.div>
       </div>
-      {!compact && (
+      {!compact && replay && (
         <div className="row center">
           <button className="btn btn-ghost btn-sm" onClick={() => setRun((r) => r + 1)}>
             <Ic n="reset" size={18} /> {tx('Ver otra vez', 'Watch again')}

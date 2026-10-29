@@ -54,7 +54,7 @@ export function Review() {
           <h2 style={{ margin: 0 }}>{tx('Tarjetas para hoy', 'Cards for today')}</h2>
           <div style={{ fontSize: '2.6rem', fontWeight: 900, color: due.length ? 'var(--yellow)' : 'var(--green)' }}>{due.length}</div>
           {deckIds.length === 0 ? (
-            <p className="small muted">{tx('Tu mazo está vacío. Termina una lección y sus tarjetas aparecerán aquí.', 'Your deck is empty. Finish a lesson and its cards will appear here.')} <Link to="/m/internet/lesson">{tx('Empieza por el módulo 1 →', 'Start with module 1 →')}</Link></p>
+            <p className="small muted">{tx('Tu mazo está vacío. Termina una lección y sus tarjetas aparecerán aquí.', 'Your deck is empty. Finish a lesson and its cards will appear here.')} <Link to="/m/internet/lesson">{tx('Empieza por el módulo 1', 'Start with module 1')}</Link></p>
           ) : (
             <div className="row">
               <button className="btn btn-primary" disabled={!due.length} onClick={() => { setAll(false); setSession((x) => x + 1); setMode('cards'); }}><Ic n="play" size={16} weight="fill" /> {tx('Repasar', 'Review')}</button>
@@ -84,7 +84,7 @@ export function Review() {
               </div>
             ))}
           </div>
-          <div className="tiny faint mt">{tx('Caja 1: hoy · 2: mañana · 3: en 3 días · 4: en 7 días · 5: en 16 días', 'Box 1: today · 2: tomorrow · 3: in 3 days · 4: in 7 days · 5: in 16 days')}</div>
+          <div className="tiny faint mt">{tx('La caja 1 vuelve hoy; la 2, mañana; la 3, en 3 días; la 4, en una semana; la 5, en 16 días.', 'Box 1 comes back today; box 2 tomorrow; box 3 in 3 days; box 4 in a week; box 5 in 16 days.')}</div>
           <div className="small mt">
             {tx('Más difíciles para ti:', 'Hardest for you:')}{' '}
             {deckIds

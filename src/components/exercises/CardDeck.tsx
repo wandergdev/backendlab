@@ -40,7 +40,7 @@ export function CardDeck({ cards, onDone, srs = true }: { cards: Card[]; onDone?
         <IcTile n="brain" color="var(--pink)" size={80} />
         <h2>{tx('¡Mazo terminado!', 'Deck finished!')}</h2>
         <p className="muted">
-          {tx(`${known} tarjetas dominadas · ${again} repeticiones extra`, `${known} cards mastered · ${again} extra repetitions`)}
+          {tx(`Dominaste ${known} tarjetas con ${again} repeticiones extra.`, `You mastered ${known} cards with ${again} extra repetitions.`)}
         </p>
         <div className="row center">
           <button className="btn btn-primary" onClick={() => { setQueue([...cards].sort(() => Math.random() - 0.5)); setKnown(0); setAgain(0); }}>
