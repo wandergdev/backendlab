@@ -82,7 +82,7 @@ export function Exercise({ ex: full, onResult }: Props) {
           <div style={{ fontSize: '1.1rem', marginBottom: 4 }}><span className="ic">{state === 'right' ? <><Ic n="celebrate" size={22} color="var(--green)" /> {tx('¡Correcto!', 'Correct!')}</> : <><Ic n="repeat" size={22} color="var(--red)" /> {tx('Casi. Lo repetiremos más adelante.', 'Almost. We will repeat it later.')}</>}</span></div>
           <div style={{ fontWeight: 600 }}>{tr(ex.explain)}</div>
           <button className={`btn ${state === 'right' ? 'btn-green' : 'btn-red'} mt`} onClick={() => onResult(state === 'right')}>
-            {tx('Continuar', 'Continue')} ▶
+            {tx('Continuar', 'Continue')} <Ic n="right" size={18} weight="bold" />
           </button>
         </motion.div>
       )}
@@ -352,7 +352,7 @@ function SqlEx({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: '
     <div className="stack">
       <textarea className="textarea" value={sql} onChange={(e) => setSql(e.target.value)} disabled={locked} placeholder="SELECT …" spellCheck={false} style={{ minHeight: 90 }} />
       <div className="row">
-        <button className="btn btn-sm" onClick={tryRun} disabled={!sql.trim()}>▶ {tx('Probar (ver resultado)', 'Try (see result)')}</button>
+        <button className="btn btn-sm" onClick={tryRun} disabled={!sql.trim()}><Ic n="play" size={16} weight="fill" /> {tx('Probar (ver resultado)', 'Try (see result)')}</button>
         <button className="btn btn-ghost btn-sm" onClick={() => setShowHint((h) => !h)}><Ic n="bulb" size={18} /> {tx('Pista', 'Hint')}</button>
         <span className="tiny faint">{tx('Tablas: users, orders, products, accounts', 'Tables: users, orders, products, accounts')}</span>
       </div>
@@ -432,7 +432,7 @@ function CodeEx({ ex, locked, register }: BodyProps & { ex: Extract<Ex, { type: 
         }}
       />
       <div className="row">
-        <button className="btn btn-sm" onClick={async () => setRes(await runCodeTests(code, ex.fn, ex.tests))}>▶ {tx('Correr pruebas', 'Run tests')}</button>
+        <button className="btn btn-sm" onClick={async () => setRes(await runCodeTests(code, ex.fn, ex.tests))}><Ic n="play" size={16} weight="fill" /> {tx('Correr pruebas', 'Run tests')}</button>
         <button className="btn btn-ghost btn-sm" onClick={() => setCode(ex.starter)}><Ic n="reset" size={18} /> {tx('Reiniciar', 'Reset')}</button>
       </div>
       {typeof res === 'string' && <div className="feedback bad small mono">{res}</div>}

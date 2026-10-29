@@ -40,7 +40,7 @@ export function Home() {
               </p>
               <div className="row mt">
                 <Link className="btn btn-primary btn-lg" to={nextStatus.started ? `/m/${next.id}/lesson` : `/m/${next.id}`}>
-                  {nextStatus.started ? tx('Continuar', 'Continue') : tx('Empezar ahora', 'Start now')} ▶
+                  {nextStatus.started ? tx('Continuar', 'Continue') : tx('Empezar ahora', 'Start now')} <Ic n="right" size={18} weight="bold" />
                 </Link>
                 {due > 0 && (
                   <Link className="btn btn-lg" to="/review">

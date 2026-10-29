@@ -52,7 +52,7 @@ export function Layout({ children }: { children: ReactNode }) {
           </button>
           <Link to="/" className="logo" aria-label="BackendLab">
             <span className="logo-mark" aria-hidden><BracketsAngleIcon size={20} weight="bold" color="#fff" /></span>
-            <span>BackendLab</span>
+            <span className="logo-text">BackendLab</span>
           </Link>
           <nav className={`nav ${open ? 'open' : ''}`} aria-label={tx('Principal', 'Main')}>
             {links.map(({ to, label, icon: I, end, badge }) => (
@@ -72,7 +72,7 @@ export function Layout({ children }: { children: ReactNode }) {
             </Link>
             <StackSwitch />
             <button className="btn btn-ghost btn-sm" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={tx('Cambiar idioma a inglés', 'Switch language to Spanish')}>
-              <TranslateIcon size={18} weight="duotone" aria-hidden /> {lang.toUpperCase()}
+              <TranslateIcon size={18} weight="duotone" aria-hidden /> <span className="lang-label">{lang.toUpperCase()}</span>
             </button>
             <button className="btn btn-ghost icon-btn" onClick={() => setSetting('theme', theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? tx('Cambiar a tema claro', 'Switch to light theme') : tx('Cambiar a tema oscuro', 'Switch to dark theme')}>
               {theme === 'dark' ? <MoonIcon size={20} weight="duotone" aria-hidden /> : <SunIcon size={20} weight="duotone" aria-hidden />}

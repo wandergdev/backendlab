@@ -334,9 +334,10 @@ main:focus { outline: none; }
 .nav-badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--red); color: #fff; font-size: 0.7rem; font-weight: 800; display: inline-grid; place-items: center; line-height: 1; }
 .nav.open a { padding: 12px 10px; }
 .bottom-nav { display: none; }
-.ic { display: inline-flex; align-items: center; gap: 8px; }
+.ic { display: flex; align-items: center; gap: 8px; }
+span.ic, a.ic, label.ic { display: inline-flex; }
 .btn svg, .pill svg, .option svg { flex: none; }
-.h-icon { display: inline-flex; align-items: center; gap: 12px; }
+.h-icon { display: flex; align-items: center; gap: 12px; }
 .h-icon > svg { color: var(--primary-2); flex: none; }
 @media (max-width: 760px) {
   .bottom-nav {
@@ -350,4 +351,15 @@ main:focus { outline: none; }
   .bn-icon .nav-badge { position: absolute; top: -4px; right: -10px; }
   .has-bottom-nav { padding-bottom: 72px; }
   .footer { padding-bottom: 90px; }
+}
+
+.stat-chip .row { flex-wrap: nowrap; }
+.center > .icon-tile, .card.center .icon-tile, .stack[style*="center"] > .icon-tile { margin-left: auto; margin-right: auto; }
+
+@media (max-width: 520px) {
+  .header-inner { gap: 6px; }
+  .header-stats { gap: 4px; }
+  .logo-text, .lang-label { display: none; }
+  .header .icon-btn { width: 40px; height: 40px; min-height: 40px; }
+  .header .btn-sm { padding: 6px 8px; }
 }

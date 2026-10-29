@@ -40,7 +40,7 @@ export function Pipeline({ item, itemEmoji, stages, success, vertical = true, on
           {itemEmoji} {tr(item)}
         </div>
         <button className="btn btn-primary btn-sm" onClick={start} disabled={running}>
-          ▶ {tx('Enviar', 'Send')}
+          <Ic n="play" size={16} weight="fill" /> {tx('Enviar', 'Send')}
         </button>
       </div>
       <div style={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', flexWrap: vertical ? 'nowrap' : 'wrap', gap: 8, alignItems: 'stretch' }}>

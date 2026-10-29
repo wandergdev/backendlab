@@ -84,7 +84,7 @@ export function ModulePage({ tab = 'overview' }: { tab?: Tab }) {
                 : tx('Cada paso muestra UNA idea con una animación, una analogía del mundo real y un ejemplo de código. No hay prisa: puedes volver atrás cuando quieras.', 'Each step shows ONE idea with an animation, a real-world analogy and a code example. No rush: you can go back anytime.')}
             </p>
             <Link className="btn btn-primary btn-lg" to={st.lesson ? `/m/${m.id}/practice` : `/m/${m.id}/lesson`}>
-              {st.lesson ? tx('Ir a la práctica', 'Go to practice') : st.lessonStep > 0 ? tx('Continuar lección', 'Continue lesson') : tx('Empezar lección', 'Start lesson')} ▶
+              {st.lesson ? tx('Ir a la práctica', 'Go to practice') : st.lessonStep > 0 ? tx('Continuar lección', 'Continue lesson') : tx('Empezar lección', 'Start lesson')} <Ic n="right" size={18} weight="bold" />
             </Link>
           </div>
         )}

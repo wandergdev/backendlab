@@ -57,7 +57,7 @@ export function Review() {
             <p className="small muted">{tx('Tu mazo está vacío. Termina una lección y sus tarjetas aparecerán aquí.', 'Your deck is empty. Finish a lesson and its cards will appear here.')} <Link to="/m/internet/lesson">{tx('Empieza por el módulo 1 →', 'Start with module 1 →')}</Link></p>
           ) : (
             <div className="row">
-              <button className="btn btn-primary" disabled={!due.length} onClick={() => { setAll(false); setSession((x) => x + 1); setMode('cards'); }}>▶ {tx('Repasar', 'Review')}</button>
+              <button className="btn btn-primary" disabled={!due.length} onClick={() => { setAll(false); setSession((x) => x + 1); setMode('cards'); }}><Ic n="play" size={16} weight="fill" /> {tx('Repasar', 'Review')}</button>
               <button className="btn" onClick={() => { setAll(true); setSession((x) => x + 1); setMode('cards'); }}>{tx(`Repasar todo (${deckIds.length})`, `Review all (${deckIds.length})`)}</button>
             </div>
           )}
@@ -68,7 +68,7 @@ export function Review() {
           <h2 style={{ margin: 0 }}>{tx('Quiz mezclado', 'Mixed quiz')}</h2>
           <p className="small muted">{tx('12 preguntas al azar de los módulos que ya estudiaste. Mezclar temas obliga al cerebro a "buscar" la respuesta, y eso la fija mejor.', '12 random questions from the modules you have studied. Mixing topics forces the brain to "search" for the answer, which makes it stick better.')}</p>
           <div className="small">{studied.length ? studied.map((id) => MODULES.find((m) => m.id === id)!.emoji).join(' ') : tx('(todavía ninguno: usaremos todos)', '(none yet: we will use all)')}</div>
-          <button className="btn btn-primary" style={{ alignSelf: 'flex-start' }} onClick={() => { setSession((x) => x + 1); setMode('quiz'); }}>▶ {tx('Empezar quiz', 'Start quiz')}</button>
+          <button className="btn btn-primary" style={{ alignSelf: 'flex-start' }} onClick={() => { setSession((x) => x + 1); setMode('quiz'); }}><Ic n="play" size={16} weight="fill" /> {tx('Empezar quiz', 'Start quiz')}</button>
         </div>
       </div>
 
