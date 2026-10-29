@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import type { Card } from '../../types';
 import { useLang } from '../../i18n/lang';
 import { reviewCard, useProgress } from '../../store/progress';
-import { Ic, IcTile } from '../ui/Icon';
+import { Glyph, Ic, IcTile } from '../ui/Icon';
 
 /**
  * Tarjetas de memoria con repetición espaciada (sistema Leitner):
@@ -58,20 +58,32 @@ export function CardDeck({ cards, onDone, srs = true }: { cards: Card[]; onDone?
     <div className="stack" style={{ gap: 14, maxWidth: 620, margin: '0 auto', width: '100%' }}>
       <div className="row between small">
         <span className="muted">{tx('Quedan', 'Left')}: <b>{queue.length}</b></span>
-        {srs && <span className="pill purple" title={tx('Cuanto más alta la caja, más días tarda en volver', 'The higher the box, the more days until it returns')}>📦 {tx('Caja', 'Box')} {box}/5</span>}
+        {srs && <span className="pill purple" title={tx('Cuanto más alta la caja, más días tarda en volver', 'The higher the box, the more days until it returns')}><Ic n="box" size={16} /> {tx(`Caja ${box} de 5`, `Box ${box} of 5`)}</span>}
       </div>
-      <div className={`flashcard ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped((f) => !f)} role="button" tabIndex={0} onKeyDown={(e) => e.key === ' ' && (e.preventDefault(), setFlipped((f) => !f))}>
-        <motion.div key={card.id + queue.length} className="flashcard-inner" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-          <div className="flashcard-face">
-            {card.emoji && <div style={{ fontSize: '3rem' }}>{card.emoji}</div>}
-            <div className="bold" style={{ fontSize: '1.35rem', lineHeight: 1.35 }}>{tr(card.front)}</div>
-            <div className="tiny faint mt">{tx('Piensa la respuesta… luego toca para girar', 'Think of the answer… then tap to flip')}</div>
+      {/* La animación de entrada va en un envoltorio aparte: si estuviera en .flashcard-inner,
+          su transform en línea anularía el rotateY(180deg) del giro y la respuesta nunca se vería. */}
+      <motion.div key={card.id + queue.length} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+        <div
+          className={`flashcard ${flipped ? 'flipped' : ''}`}
+          onClick={() => setFlipped((f) => !f)}
+          role="button"
+          tabIndex={0}
+          aria-pressed={flipped}
+          aria-label={flipped ? tx('Respuesta visible. Pulsa para volver a la pregunta', 'Answer showing. Press to go back to the question') : tx('Pulsa para ver la respuesta', 'Press to see the answer')}
+          onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), setFlipped((f) => !f))}
+        >
+          <div className="flashcard-inner">
+            <div className="flashcard-face" aria-hidden={flipped}>
+              {card.emoji && <Glyph emoji={card.emoji} size={44} color="var(--primary-2)" />}
+              <div className="bold" style={{ fontSize: '1.35rem', lineHeight: 1.35 }}>{tr(card.front)}</div>
+              <div className="small faint mt">{tx('Piensa la respuesta y luego gira la tarjeta.', 'Think of the answer, then flip the card.')}</div>
+            </div>
+            <div className="flashcard-face back" aria-hidden={!flipped}>
+              <div style={{ fontSize: '1.12rem', lineHeight: 1.5, fontWeight: 700, whiteSpace: 'pre-line' }}>{tr(card.back)}</div>
+            </div>
           </div>
-          <div className="flashcard-face back">
-            <div style={{ fontSize: '1.12rem', lineHeight: 1.5, fontWeight: 700, whiteSpace: 'pre-line' }}>{tr(card.back)}</div>
-          </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
       {flipped ? (
         <div className="grid grid-2">
           <button className="btn btn-red btn-lg" onClick={() => answer(false)}><Ic n="repeat" /> {tx('Repasar otra vez', 'Show again')}</button>
